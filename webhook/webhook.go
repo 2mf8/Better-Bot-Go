@@ -99,7 +99,7 @@ func HandleValidation(c *gin.Context) {
 	validationPayload := &ValidationRequest{}
 	b, _ := json.Marshal(payload.Data)
 	go func() {
-		wsbot.NewPush(&onebot.Frame{BotId: appid, Data: string(b)})
+		wsbot.NewPush(&onebot.Frame{BotId: appid, Data: b})
 	}()
 	if FirstStart {
 		NewBot(header, payload, b, header.XBotAppid[0])
@@ -172,8 +172,7 @@ func InitGin() {
 					continue
 				}
 				iport = realPort
-				log.Infof("端口号 %s", realPort)
-				log.Infof("正向 WebSocket 地址为 ws://localhost:%s/websocket", realPort)
+				log.Infof("端口号为 %s,正向 WebSocket 地址为 ws://localhost:%s/websocket", realPort, realPort)
 				break
 			}
 		}

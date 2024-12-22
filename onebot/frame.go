@@ -6,5 +6,5 @@ type Frame struct {
 	Ok     bool   `json:"ok,omitempty"`
 	Time   int64  `json:"time,omitempty"`
 	SelfId string `json:"self_id,omitempty"`
-	Data   string `json:"data,omitempty"`
+	Data   []byte `json:"data,omitempty"`
 }
