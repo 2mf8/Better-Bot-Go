@@ -18,7 +18,9 @@ import (
 	"time"
 
 	"github.com/2mf8/Better-Bot-Go/dto"
+	"github.com/2mf8/Better-Bot-Go/onebot"
 	"github.com/2mf8/Better-Bot-Go/openapi"
+	wsbot "github.com/2mf8/Better-Bot-Go/websocket"
 	"github.com/fanliao/go-promise"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -96,6 +98,9 @@ func HandleValidation(c *gin.Context) {
 	}
 	validationPayload := &ValidationRequest{}
 	b, _ := json.Marshal(payload.Data)
+	go func() {
+		wsbot.NewPush(&onebot.Frame{BotId: appid, Data: b})
+	}()
 	if FirstStart {
 		NewBot(header, payload, b, header.XBotAppid[0])
 		FirstStart = false
@@ -145,6 +150,11 @@ func InitGin() {
 	router.Use(CORSMiddleware())
 	router.GET("/", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "it works")
+	})
+	router.GET("/websocket", func(ctx *gin.Context) {
+		if err := wsbot.UpgradeWebsocket(ctx.Writer, ctx.Request); err != nil {
+			fmt.Println("创建 WebSocket 失败")
+		}
 	})
 	router.POST("/qqbot/:appid", HandleValidation)
 
