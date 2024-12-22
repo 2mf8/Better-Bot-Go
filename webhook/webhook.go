@@ -173,6 +173,7 @@ func InitGin() {
 				}
 				iport = realPort
 				log.Infof("端口号 %s", realPort)
+				log.Infof("正向 WebSocket 地址为 ws://localhost:%s/websocket", realPort)
 				break
 			}
 		}
