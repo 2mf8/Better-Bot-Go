@@ -2,6 +2,12 @@
 
 ## 由原来的 [Go-QQ-SDK](https://github.com/2mf8/Go-QQ-SDK) 迁移过来。
 
+## 已支持正向 WebSocket ,正向 WebSocket 地址为 `wss://你的域名:端口/websocket` , 程序启动默认启用。
+
+示例 `wss://fw1009zb5979.vicp.fun:443/websocket`
+
+## 对应的 WebSocket 客户端地址 [Bot-Client-Go](https://github.com/2mf8/Bot-Client-Go) ,欢迎大家使用。
+
 QQ频道机器人，官方 GOLANG SDK。
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/2mf8/Better-Bot-Go.svg)](https://pkg.go.dev/github.com/2mf8/Better-Bot-Go)
