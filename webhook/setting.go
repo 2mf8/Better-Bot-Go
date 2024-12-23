@@ -15,6 +15,8 @@ type App struct {
 	AppId     uint64 `json:"app_id,omitempty" toml:"AppId"`
 	Token     string `json:"token,omitempty" toml:"Token"`
 	AppSecret string `json:"app_secret,omitempty" toml:"AppSecret"`
+	IsSandBox bool   `json:"is_sandbox,omitempty" toml:"IsSandBox"`
+	WSSAddr   string `json:"wss_addr,omitempty" toml:"WSSAddr"`
 }
 type Setting struct {
 	Apps     map[string]*App `json:"apps,omitempty" toml:"Apps"`
@@ -54,14 +56,16 @@ func ReadSetting() Setting {
 		AppId:     123456,
 		Token:     "你的AppToken",
 		AppSecret: "你的AppSecret",
+		IsSandBox: false,
+		WSSAddr:   "客户端WSS地址配置项",
 	}
 	appMap := make(map[string]*App)
 	appMap[fmt.Sprintf("%v", app.AppId)] = app
 	apps := &Setting{
 		Apps:     appMap,
 		Port:     8443,
-		CertFile: "ssl证书文件路径",
-		CertKey:  "ssl证书密钥",
+		CertFile: "服务端ssl证书文件路径，客户端不用管",
+		CertKey:  "服务端ssl证书密钥，客户端不用管",
 	}
 
 	output, err := json.MarshalIndent(apps, "", "\t")

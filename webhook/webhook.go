@@ -79,8 +79,6 @@ type ValidationResponse struct {
 
 func HandleValidation(c *gin.Context) {
 	appid := c.Param("appid")
-	//if appid == "" {} else {}
-	fmt.Println(appid)
 	header := &BotHeaderInfo{}
 	h, _ := json.Marshal(c.Request.Header)
 	json.Unmarshal(h, header)
@@ -178,7 +176,7 @@ func InitGin() {
 		}
 	} else {
 		iport = realPort
-		log.Infof("端口号 %s", realPort)
+		log.Infof("端口号为 %s,正向 WebSocket 地址为 ws://localhost:%s/websocket", realPort, realPort)
 	}
 }
 
