@@ -56,7 +56,7 @@ func ReadSetting() Setting {
 		AppId:     123456,
 		Token:     "你的AppToken",
 		AppSecret: "你的AppSecret",
-		IsSandBox: false,
+		IsSandBox: true,
 		WSSAddr:   "客户端WSS地址配置项",
 	}
 	appMap := make(map[string]*App)
