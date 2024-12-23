@@ -97,7 +97,7 @@ func HandleValidation(c *gin.Context) {
 	validationPayload := &ValidationRequest{}
 	b, _ := json.Marshal(payload.Data)
 	go func() {
-		wsbot.NewPush(&onebot.Frame{BotId: appid, Data: b, Payload: payload})
+		wsbot.NewPush(appid,&onebot.Frame{BotId: appid, Data: b, Payload: payload})
 	}()
 	if FirstStart {
 		NewBot(header, payload, b, header.XBotAppid[0])

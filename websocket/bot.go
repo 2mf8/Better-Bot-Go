@@ -16,36 +16,35 @@ var Bots = make(map[string]*Bot)
 var echo = ""
 
 type Bot struct {
-	RemoteAddr    string
+	BotId         string
 	Session       *SafeWebSocket
 	mux           sync.RWMutex
 	WaitingFrames map[string]*promise.Promise
 }
 
-func NewBot(conn *websocket.Conn) *Bot {
-	addr := conn.RemoteAddr()
+func NewBot(xSelfId string, conn *websocket.Conn) *Bot {
 	messageHandler := func(messageType int, data []byte) {
-		_, ok := Bots[addr.String()]
+		_, ok := Bots[xSelfId]
 		if !ok {
 			_ = conn.Close()
 			return
 		}
 	}
 	closeHandler := func(code int, message string) {
-		fmt.Printf("WebSocket客户端 %s 已断开连接\n", addr)
-		delete(Bots, addr.String())
+		fmt.Printf("机器人 %s 已断开连接\n", xSelfId)
+		delete(Bots, xSelfId)
 	}
 	safeWs := NewSafeWebSocket(conn, messageHandler, closeHandler)
 	bot := &Bot{
-		RemoteAddr:    addr.String(),
+		BotId:         xSelfId,
 		Session:       safeWs,
 		WaitingFrames: make(map[string]*promise.Promise),
 	}
-	Bots[addr.String()] = bot
-	fmt.Printf("新的WebSocket客户端已连接：%s\n", bot.RemoteAddr)
-	fmt.Println("所有WebSocket客户端地址列表：")
-	for naddr, _ := range Bots {
-		println(naddr)
+	Bots[xSelfId] = bot
+	fmt.Printf("新机器人已连接：%s\n", xSelfId)
+	fmt.Println("所有机器人列表：")
+	for xId, _ := range Bots {
+		println(xId)
 	}
 	return bot
 }
@@ -92,13 +91,11 @@ func (bot *Bot) delWaitingFrame(key string) {
 	delete(bot.WaitingFrames, key)
 }
 
-func NewPush(frame *onebot.Frame) error {
+func NewPush(appid string, frame *onebot.Frame) error {
 	data, err := json.Marshal(frame)
 	if err != nil {
 		return err
 	}
-	for _, bot := range Bots {
-		bot.Session.Send(websocket.TextMessage, data)
-	}
+	Bots[appid].Session.Send(websocket.TextMessage, data)
 	return nil
 }
