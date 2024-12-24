@@ -31,6 +31,7 @@ type MessageKeyboard struct {
 
 // CustomKeyboard 自定义 Keyboard
 type CustomKeyboard struct {
+	BotAppId uint64 `json:"bot_appid,omitempty"`
 	Rows []*Row `json:"rows,omitempty"` // 行数组
 }
 
