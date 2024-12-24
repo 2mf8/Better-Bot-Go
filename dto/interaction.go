@@ -16,6 +16,7 @@ type Interaction struct {
 	ChatType          uint32           `json:"chat_type,omitempty"`
 	Scene             string           `json:"scene,omitempty"`
 	Timestamp         string           `json:"timestamp,omitempty"`
+	UserOpenId        string           `json:"user_openid,omitempty"`
 }
 
 // InteractionType 互动类型
