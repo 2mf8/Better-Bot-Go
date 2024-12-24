@@ -96,6 +96,8 @@ func NewPush(appid string, frame *onebot.Frame) error {
 	if err != nil {
 		return err
 	}
-	Bots[appid].Session.Send(websocket.TextMessage, data)
+	if bot, ok := Bots[appid]; ok {
+		bot.Session.Send(websocket.TextMessage, data)
+	}
 	return nil
 }
