@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 
 	"github.com/2mf8/Better-Bot-Go/dto"
 	"github.com/2mf8/Better-Bot-Go/errs"
@@ -60,6 +61,38 @@ func (o *openAPI) PostMessage(ctx context.Context, channelID string, msg *dto.Me
 		SetResult(dto.Message{}).
 		SetPathParam("channel_id", channelID).
 		SetBody(msg).
+		Post(o.getURL(messagesURI))
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.Result().(*dto.Message), nil
+}
+
+// 频道发 file_image
+func (o *openAPI) PostFormFileImage(ctx context.Context, channelID string, m map[string]string, path string) (*dto.Message, error) {
+	resp, err := o.request(ctx).
+		SetHeader("Content-Type", "multipart/form-data").
+		SetResult(dto.Message{}).
+		SetPathParam("channel_id", channelID).
+		SetFormData(m).
+		SetFile("file_image", path).
+		Post(o.getURL(messagesURI))
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.Result().(*dto.Message), nil
+}
+
+// 频道发 file_image
+func (o *openAPI) PostFormFileReaderImage(ctx context.Context, channelID string, m map[string]string, filename string, r io.Reader) (*dto.Message, error) {
+	resp, err := o.request(ctx).
+		SetHeader("Content-Type", "multipart/form-data").
+		SetResult(dto.Message{}).
+		SetPathParam("channel_id", channelID).
+		SetFormData(m).
+		SetFileReader("file_image", filename, r).
 		Post(o.getURL(messagesURI))
 	if err != nil {
 		return nil, err

@@ -2,6 +2,7 @@ package openapi
 
 import (
 	"context"
+	"io"
 	"time"
 
 	"github.com/2mf8/Better-Bot-Go/dto"
@@ -68,6 +69,8 @@ type MessageAPI interface {
 	Message(ctx context.Context, channelID string, messageID string) (*dto.Message, error)
 	Messages(ctx context.Context, channelID string, pager *dto.MessagesPager) ([]*dto.Message, error)
 	PostMessage(ctx context.Context, channelID string, msg *dto.MessageToCreate) (*dto.Message, error)
+	PostFormFileImage(ctx context.Context, channelID string, m map[string]string, path string) (*dto.Message, error)
+	PostFormFileReaderImage(ctx context.Context, channelID string, m map[string]string, filename string, r io.Reader) (*dto.Message, error)
 	PatchMessage(ctx context.Context,
 		channelID string, messageID string, msg *dto.MessageToCreate) (*dto.Message, error)
 	PostGroupMessage(ctx context.Context, groupId string, msg *dto.GroupMessageToCreate) (*dto.GroupMsgResp, error)
@@ -77,8 +80,8 @@ type MessageAPI interface {
 	RetractMessage(ctx context.Context, channelID, msgID string, options ...RetractMessageOption) error
 	// PostSettingGuide 发送设置引导
 	PostSettingGuide(ctx context.Context, channelID string, atUserIDs []string) (*dto.Message, error)
-	DelC2CMessage(ctx context.Context,userID, msgID string, options ...RetractMessageOption) error
-	DelGroupBotMessage(ctx context.Context,groupID, msgID string, options ...RetractMessageOption) error
+	DelC2CMessage(ctx context.Context, userID, msgID string, options ...RetractMessageOption) error
+	DelGroupBotMessage(ctx context.Context, groupID, msgID string, options ...RetractMessageOption) error
 }
 
 // GuildAPI guild 相关接口
