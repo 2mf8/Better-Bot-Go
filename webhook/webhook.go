@@ -293,14 +293,14 @@ func (bot *Bot) ParseWHData(h *BotHeaderInfo, p *dto.WSPayload, message []byte) 
 			GroupAtMessageEventHandler(h, p, gm)
 		}
 	}
-	if p.Type == dto.EventGroupAddRobbot {
+	if p.Type == dto.EventGroupAddRobot {
 		gar := &dto.WSGroupAddRobotData{}
 		err := json.Unmarshal(message, gar)
 		if err == nil {
 			GroupAddRobotEventHandler(h, p, gar)
 		}
 	}
-	if p.Type == dto.EventGroupDelRobbot {
+	if p.Type == dto.EventGroupDelRobot {
 		gdr := &dto.WSGroupDelRobotData{}
 		err := json.Unmarshal(message, gdr)
 		if err == nil {

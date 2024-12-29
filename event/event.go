@@ -56,8 +56,8 @@ var eventParseFuncMap = map[dto.OPCode]map[dto.EventType]eventParseFunc{
 		dto.EventGroupMessageCreate:   groupMessageHandler,
 		dto.EventC2CMessageCreate:     c2cMessageHandle,
 
-		dto.EventGroupAddRobbot:  groupAddRobotHandle,
-		dto.EventGroupDelRobbot:  groupDelRobotHandle,
+		dto.EventGroupAddRobot:  groupAddRobotHandle,
+		dto.EventGroupDelRobot:  groupDelRobotHandle,
 		dto.EventGroupMsgReject:  groupMsgRejectHandle,
 		dto.EventGroupMsgReceive: groupMsgReceiveHandle,
 

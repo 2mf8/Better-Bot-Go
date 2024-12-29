@@ -41,8 +41,8 @@ const (
 	EventC2CMessageCreate      EventType = "C2C_MESSAGE_CREATE"
 	EventGroupATMessageCreate  EventType = "GROUP_AT_MESSAGE_CREATE"
 	EventGroupMessageCreate    EventType = "GROUP_MESSAGE_CREATE"
-	EventGroupAddRobbot        EventType = "GROUP_ADD_ROBBOT"
-	EventGroupDelRobbot        EventType = "GROUP_DEL_ROBBOT"
+	EventGroupAddRobot        EventType = "GROUP_ADD_ROBOT"
+	EventGroupDelRobot        EventType = "GROUP_DEL_ROBOT"
 	EventGroupMsgReject        EventType = "GROUP_MSG_REJECT"
 	EventGroupMsgReceive       EventType = "GROUP_MSG_RECEIVE"
 	EventFriendAdd             EventType = "FRIEND_ADD"
@@ -69,7 +69,7 @@ var intentEventMap = map[Intent][]EventType{
 		EventForumPostDelete, EventForumReplyCreate, EventForumReplyDelete, EventForumAuditResult,
 	},
 	IntentInteraction: {EventInteractionCreate},
-	IntentQQ:          {EventC2CMessageCreate, EventC2CMsgReceive, EventC2CMsgReject, EventGroupATMessageCreate, EventGroupMessageCreate, EventGroupAddRobbot, EventGroupDelRobbot, EventGroupMsgReceive, EventGroupMsgReject, EventFriendAdd, EventFriendDel},
+	IntentQQ:          {EventC2CMessageCreate, EventC2CMsgReceive, EventC2CMsgReject, EventGroupATMessageCreate, EventGroupMessageCreate, EventGroupAddRobot, EventGroupDelRobot, EventGroupMsgReceive, EventGroupMsgReject, EventFriendAdd, EventFriendDel},
 }
 
 var eventIntentMap = transposeIntentEventMap(intentEventMap)
