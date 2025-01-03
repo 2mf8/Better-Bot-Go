@@ -38,7 +38,7 @@ func NewBot(xSelfId string, addr string, conn *websocket.Conn) *Bot {
 		fmt.Printf("机器人 %s 地址 %s 已断开连接\n", xSelfId, addr)
 		delete(Bots[xSelfId], addr)
 	}
-	safeWs := NewSafeWebSocket(conn, messageHandler, closeHandler)
+	safeWs := NewSafeWebSocket(xSelfId, conn, messageHandler, closeHandler)
 	bot := &Bot{
 		BotId:         xSelfId,
 		Session:       safeWs,
