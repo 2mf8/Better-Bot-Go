@@ -13,7 +13,6 @@ import (
 )
 
 var Bots = make(map[string]map[string]*Bot)
-var ABot = map[string]*Bot{}
 var echo = ""
 
 type Bot struct {
@@ -25,10 +24,12 @@ type Bot struct {
 
 func NewBot(xSelfId string, addr string, conn *websocket.Conn) *Bot {
 	messageHandler := func(messageType int, data []byte) {
-		_, ok := Bots[xSelfId][addr]
-		if !ok {
-			_ = conn.Close()
-			return
+		if _, ok := Bots[xSelfId]; ok {
+			_, ok = Bots[xSelfId][addr]
+			if !ok {
+				_ = conn.Close()
+				return
+			}
 		}
 	}
 	closeHandler := func(code int, message string) {
@@ -41,9 +42,12 @@ func NewBot(xSelfId string, addr string, conn *websocket.Conn) *Bot {
 		Session:       safeWs,
 		WaitingFrames: make(map[string]*promise.Promise),
 	}
-	
-	ABot[addr] = bot
-	Bots[xSelfId] = ABot
+	if _, ok := Bots[xSelfId]; ok {
+		Bots[xSelfId][addr] = bot
+	} else {
+		Bots[xSelfId] = map[string]*Bot{}
+		Bots[xSelfId][addr] = bot
+	}
 	fmt.Printf("新机器人及地址已连接：%s 地址 %s\n", xSelfId, addr)
 	fmt.Println("所有机器人及地址列表：")
 	for xId, xbot := range Bots {
