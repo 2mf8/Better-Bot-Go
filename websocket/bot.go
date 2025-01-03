@@ -27,6 +27,8 @@ func NewBot(xSelfId string, addr string, conn *websocket.Conn) *Bot {
 		if _, ok := Bots[xSelfId]; ok {
 			_, ok = Bots[xSelfId][addr]
 			if !ok {
+				fmt.Printf("机器人 %s 地址 %s 已断开连接\n", xSelfId, addr)
+				delete(Bots[xSelfId], addr)
 				_ = conn.Close()
 				return
 			}
@@ -48,7 +50,7 @@ func NewBot(xSelfId string, addr string, conn *websocket.Conn) *Bot {
 		Bots[xSelfId] = map[string]*Bot{}
 		Bots[xSelfId][addr] = bot
 	}
-	fmt.Printf("新机器人及地址已连接：%s 地址 %s\n", xSelfId, addr)
+	fmt.Printf("\n新机器人及地址已连接：%s 地址 %s\n", xSelfId, addr)
 	fmt.Println("所有机器人及地址列表：")
 	for xId, xbot := range Bots {
 		for ad, _ := range xbot {
