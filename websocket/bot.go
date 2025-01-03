@@ -46,8 +46,8 @@ func NewBot(xSelfId string, addr string, conn *websocket.Conn) *Bot {
 	fmt.Printf("新机器人及地址已连接：%s 地址 %s\n", xSelfId, addr)
 	fmt.Println("所有机器人及地址列表：")
 	for xId, xbot := range Bots {
-		for _, addr := range xbot {
-			println(xId, addr)
+		for ad, _ := range xbot {
+			println(xId, ad)
 		}
 	}
 	return bot
