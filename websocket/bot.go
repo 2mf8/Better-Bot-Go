@@ -40,7 +40,9 @@ func NewBot(xSelfId string, addr string, conn *websocket.Conn) *Bot {
 		Session:       safeWs,
 		WaitingFrames: make(map[string]*promise.Promise),
 	}
-	Bots[xSelfId][addr] = bot
+	aBot := map[string]*Bot{}
+	aBot[addr] = bot
+	Bots[xSelfId] = aBot
 	fmt.Printf("新机器人及地址已连接：%s 地址 %s\n", xSelfId, addr)
 	fmt.Println("所有机器人及地址列表：")
 	for xbot, xId := range Bots {
