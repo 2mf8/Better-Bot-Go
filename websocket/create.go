@@ -14,10 +14,11 @@ var upgrader = websocket.Upgrader{
 
 func UpgradeWebsocket(w http.ResponseWriter, r *http.Request) error {
 	xBotSelfId := r.Header.Get("x-bot-self-id")
+	addr := r.RemoteAddr
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		return err
 	}
-	NewBot(xBotSelfId, c)
+	NewBot(xBotSelfId, addr, c)
 	return nil
 }

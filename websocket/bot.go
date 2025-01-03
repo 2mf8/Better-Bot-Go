@@ -12,7 +12,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var Bots = make(map[string]*Bot)
+var Bots = make(map[string]map[string]*Bot)
 var echo = ""
 
 type Bot struct {
@@ -22,17 +22,17 @@ type Bot struct {
 	WaitingFrames map[string]*promise.Promise
 }
 
-func NewBot(xSelfId string, conn *websocket.Conn) *Bot {
+func NewBot(xSelfId string, addr string, conn *websocket.Conn) *Bot {
 	messageHandler := func(messageType int, data []byte) {
-		_, ok := Bots[xSelfId]
+		_, ok := Bots[xSelfId][addr]
 		if !ok {
 			_ = conn.Close()
 			return
 		}
 	}
 	closeHandler := func(code int, message string) {
-		fmt.Printf("机器人 %s 已断开连接\n", xSelfId)
-		delete(Bots, xSelfId)
+		fmt.Printf("机器人 %s 地址 %s 已断开连接\n", xSelfId, addr)
+		delete(Bots[xSelfId], addr)
 	}
 	safeWs := NewSafeWebSocket(conn, messageHandler, closeHandler)
 	bot := &Bot{
@@ -40,11 +40,13 @@ func NewBot(xSelfId string, conn *websocket.Conn) *Bot {
 		Session:       safeWs,
 		WaitingFrames: make(map[string]*promise.Promise),
 	}
-	Bots[xSelfId] = bot
-	fmt.Printf("新机器人已连接：%s\n", xSelfId)
-	fmt.Println("所有机器人列表：")
-	for xId, _ := range Bots {
-		println(xId)
+	Bots[xSelfId][addr] = bot
+	fmt.Printf("新机器人及地址已连接：%s 地址 %s\n", xSelfId, addr)
+	fmt.Println("所有机器人及地址列表：")
+	for xbot, xId := range Bots {
+		for addr, _ := range xbot {
+			println(xId, addr)
+		}
 	}
 	return bot
 }
@@ -96,8 +98,10 @@ func NewPush(appid string, frame *onebot.Frame) error {
 	if err != nil {
 		return err
 	}
-	if bot, ok := Bots[appid]; ok {
-		bot.Session.Send(websocket.TextMessage, data)
+	if xbot, ok := Bots[appid]; ok {
+		for _, bot := range xbot {
+			bot.Session.Send(websocket.TextMessage, data)
+		}
 	}
 	return nil
 }
