@@ -166,10 +166,10 @@ func HandleValidationWithAppSecret(c *gin.Context) {
 		wsbot.NewSecretPush(appid, appsecret, f)
 	}()
 	if FirstStart {
-		NewBot(header, payload, b, header.XBotAppid[0])
+		NewSecretBot(header, payload, b, header.XBotAppid[0])
 		FirstStart = false
 	}
-	NewBot(header, payload, b, header.XBotAppid[0])
+	NewSecretBot(header, payload, b, header.XBotAppid[0])
 	if err = json.Unmarshal(b, validationPayload); err != nil {
 		log.Println("parse http payload failed:", err)
 		return
@@ -355,6 +355,19 @@ func NewBot(h *BotHeaderInfo, p *dto.WSPayload, m []byte, appId string) *Bot {
 		AppId:     appId,
 		Token:     as.Apps[appId].Token,
 		AppSecret: as.Apps[appId].AppSecret,
+		Payload:   p,
+	}
+	Bots[bot.AppId] = bot
+	return bot
+}
+
+func NewSecretBot(h *BotHeaderInfo, p *dto.WSPayload, m []byte, appId string) *Bot {
+	ibot, ok := Bots[appId]
+	if ok {
+		ibot.ParseWHData(h, p, m)
+	}
+	bot := &Bot{
+		AppId:     appId,
 		Payload:   p,
 	}
 	Bots[bot.AppId] = bot
