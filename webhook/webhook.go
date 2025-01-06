@@ -205,7 +205,7 @@ func HandleValidationWithAppSecret(c *gin.Context) {
 	c.Data(http.StatusOK, c.ContentType(), rspBytes)
 }
 
-func InitGin() {
+func InitGin(IsOpen bool) {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.New()
 	router.Use(gin.Recovery())
@@ -214,18 +214,21 @@ func InitGin() {
 	router.GET("/", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "it works")
 	})
-	router.GET("/websocket", func(ctx *gin.Context) {
-		if err := wsbot.UpgradeWebsocket(ctx.Writer, ctx.Request); err != nil {
-			fmt.Println("创建 WebSocket 失败")
-		}
-	})
-	router.GET("/qqbot/websocket",func(ctx *gin.Context) {
-		if err := wsbot.UpgradeWebsocketWithSecret(ctx.Writer, ctx.Request); err != nil {
-			fmt.Println("创建 WebSocket 失败")
-		}
-	})
-	router.POST("/qqbot/:appid", HandleValidation)
-	router.POST("/qqbot/:appid/:app_secret", HandleValidationWithAppSecret)
+	if !IsOpen {
+		router.GET("/websocket", func(ctx *gin.Context) {
+			if err := wsbot.UpgradeWebsocket(ctx.Writer, ctx.Request); err != nil {
+				fmt.Println("创建 WebSocket 失败")
+			}
+		})
+		router.POST("/qqbot/:appid", HandleValidation)
+	} else {
+		router.GET("/wss/qqbot", func(ctx *gin.Context) {
+			if err := wsbot.UpgradeWebsocketWithSecret(ctx.Writer, ctx.Request); err != nil {
+				fmt.Println("创建 WebSocket 失败")
+			}
+		})
+		router.POST("/qqbot/:appid/:app_secret", HandleValidationWithAppSecret)
+	}
 
 	iport := strconv.FormatInt(int64(AllSetting.Port), 10)
 	realPort, err := RunGin(router, ":"+iport)
@@ -241,13 +244,21 @@ func InitGin() {
 					continue
 				}
 				iport = realPort
-				log.Infof("端口号为 %s,正向 WebSocket 地址为 ws://localhost:%s/websocket", realPort, realPort)
+				if IsOpen {
+					log.Infof("端口号为 %s,正向 WebSocket 地址为 ws://localhost:%s/wss/qqbot", realPort, realPort)
+				} else {
+					log.Infof("端口号为 %s,正向 WebSocket 地址为 ws://localhost:%s/websocket", realPort, realPort)
+				}
 				break
 			}
 		}
 	} else {
 		iport = realPort
-		log.Infof("端口号为 %s,正向 WebSocket 地址为 ws://localhost:%s/websocket", realPort, realPort)
+		if IsOpen {
+			log.Infof("端口号为 %s,正向 WebSocket 地址为 ws://localhost:%s/wss/qqbot", realPort, realPort)
+		} else {
+			log.Infof("端口号为 %s,正向 WebSocket 地址为 ws://localhost:%s/websocket", realPort, realPort)
+		}
 	}
 }
 

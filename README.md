@@ -62,6 +62,12 @@ QQ频道机器人，官方 GOLANG SDK。
 
 ### 1.回调地址配置
 
+#### is_open 为 true 时, 服务端只需要关注 port, cert_file 和 cert_key
+https://你的域名:端口/qqbot/你的应用appid/你的应用app_secret
+
+示例 `https://fw1009zb5979.vicp.fun:443/qqbot/101981675/hjksdfhi3jkslfjlksdfjksejkdjk`
+
+#### is_open 为 false 时
 https://你的域名:端口/qqbot/你的应用appid
 
 示例 `https://fw1009zb5979.vicp.fun:443/qqbot/101981675`
@@ -77,11 +83,14 @@ https://你的域名:端口/qqbot/你的应用appid
 			"app_id": 123456,
 			"token": "你的AppToken",
 			"app_secret": "你的AppSecret"
+			"is_sandbox": true,
+			"wss_addr": "你的wss地址，服务端不用管"
 		}
 	},
 	"port": 8443,
 	"cert_file": "ssl证书文件路径",
 	"cert_key": "ssl证书密钥"
+	"is_open": true
 }
 ```
 多账号
@@ -94,17 +103,22 @@ https://你的域名:端口/qqbot/你的应用appid
 			"app_id": 5123456,
 			"token": "你的AppToken",
 			"app_secret": "你的AppSecret"
+			"is_sandbox": true,
+			"wss_addr": "你的wss地址，服务端不用管"
 		},
 		"7234567": {
 			"qq": 234567,
 			"app_id": 7234567,
 			"token": "你的AppToken",
 			"app_secret": "你的AppSecret"
+			"is_sandbox": true,
+			"wss_addr": "你的wss地址，服务端不用管"
 		}
 	},
 	"port": 8443,
 	"cert_file": "ssl证书文件路径",
 	"cert_key": "ssl证书密钥"
+	"is_open": true
 }
 ```
 

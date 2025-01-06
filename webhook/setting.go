@@ -23,6 +23,7 @@ type Setting struct {
 	Port     int             `json:"port,omitempty" toml:"Port"`
 	CertFile string          `json:"cert_file,omitempty" toml:"CertFile"`
 	CertKey  string          `json:"cert_key,omitempty" toml:"CertKey"`
+	IsOpen   bool            `json:"is_open,omitempty" toml:"IsOpen"`
 }
 
 var SettingPath = "setting"
@@ -66,6 +67,7 @@ func ReadSetting() Setting {
 		Port:     8443,
 		CertFile: "服务端ssl证书文件路径，客户端不用管",
 		CertKey:  "服务端ssl证书密钥，客户端不用管",
+		IsOpen:   true,
 	}
 
 	output, err := json.MarshalIndent(apps, "", "\t")
