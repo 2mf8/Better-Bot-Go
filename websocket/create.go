@@ -22,3 +22,15 @@ func UpgradeWebsocket(w http.ResponseWriter, r *http.Request) error {
 	NewBot(xBotSelfId, addr, c)
 	return nil
 }
+
+func UpgradeWebsocketWithSecret(w http.ResponseWriter, r *http.Request) error {
+	xBotSelfId := r.Header.Get("x-bot-self-id")
+	xBotSecret := r.Header.Get("x-bot-secret")
+	addr := r.RemoteAddr
+	c, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		return err
+	}
+	NewSecretBot(xBotSelfId, xBotSecret, addr, c)
+	return nil
+}

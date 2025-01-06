@@ -17,6 +17,7 @@ var echo = ""
 
 type Bot struct {
 	BotId         string
+	BotSecret     string
 	Session       *SafeWebSocket
 	mux           sync.RWMutex
 	WaitingFrames map[string]*promise.Promise
@@ -41,6 +42,45 @@ func NewBot(xSelfId string, addr string, conn *websocket.Conn) *Bot {
 	safeWs := NewSafeWebSocket(xSelfId, conn, messageHandler, closeHandler)
 	bot := &Bot{
 		BotId:         xSelfId,
+		Session:       safeWs,
+		WaitingFrames: make(map[string]*promise.Promise),
+	}
+	if _, ok := Bots[xSelfId]; ok {
+		Bots[xSelfId][addr] = bot
+	} else {
+		Bots[xSelfId] = map[string]*Bot{}
+		Bots[xSelfId][addr] = bot
+	}
+	fmt.Printf("\n新机器人及地址已连接：%s 地址 %s\n", xSelfId, addr)
+	fmt.Println("所有机器人及地址列表：")
+	for xId, xbot := range Bots {
+		for ad, _ := range xbot {
+			println(xId, ad)
+		}
+	}
+	return bot
+}
+
+func NewSecretBot(xSelfId, xBotSecret string, addr string, conn *websocket.Conn) *Bot {
+	messageHandler := func(messageType int, data []byte) {
+		if _, ok := Bots[xSelfId]; ok {
+			_, ok = Bots[xSelfId][addr]
+			if !ok {
+				fmt.Printf("机器人 %s 地址 %s 已断开连接\n", xSelfId, addr)
+				delete(Bots[xSelfId], addr)
+				_ = conn.Close()
+				return
+			}
+		}
+	}
+	closeHandler := func(code int, message string) {
+		fmt.Printf("机器人 %s 地址 %s 已断开连接\n", xSelfId, addr)
+		delete(Bots[xSelfId], addr)
+	}
+	safeWs := NewSafeWebSocket(xSelfId, conn, messageHandler, closeHandler)
+	bot := &Bot{
+		BotId:         xSelfId,
+		BotSecret:     xBotSecret,
 		Session:       safeWs,
 		WaitingFrames: make(map[string]*promise.Promise),
 	}
@@ -110,6 +150,21 @@ func NewPush(appid string, frame *onebot.Frame) error {
 	if xbot, ok := Bots[appid]; ok {
 		for _, bot := range xbot {
 			bot.Session.Send(websocket.TextMessage, data)
+		}
+	}
+	return nil
+}
+
+func NewSecretPush(appid, secret string, frame *onebot.Frame) error {
+	data, err := json.Marshal(frame)
+	if err != nil {
+		return err
+	}
+	if xbot, ok := Bots[appid]; ok {
+		for _, bot := range xbot {
+			if secret == bot.BotSecret {
+				bot.Session.Send(websocket.TextMessage, data)
+			}
 		}
 	}
 	return nil

@@ -141,6 +141,70 @@ func HandleValidation(c *gin.Context) {
 	c.Data(http.StatusOK, c.ContentType(), rspBytes)
 }
 
+func HandleValidationWithAppSecret(c *gin.Context) {
+	appid := c.Param("appid")
+	appsecret := c.Param("app_secret")
+	header := &BotHeaderInfo{}
+	h, _ := json.Marshal(c.Request.Header)
+	json.Unmarshal(h, header)
+	fmt.Println("Header信息：", string(h))
+	httpBody, err := io.ReadAll(c.Request.Body)
+	fmt.Println("Body信息：", string(httpBody))
+	if err != nil {
+		log.Println("read http body err", err)
+		return
+	}
+	payload := &dto.WSPayload{}
+	if err = json.Unmarshal(httpBody, payload); err != nil {
+		log.Println("parse http payload err", err)
+		return
+	}
+	validationPayload := &ValidationRequest{}
+	b, _ := json.Marshal(payload.Data)
+	f := &onebot.Frame{BotId: appid, Data: b, Payload: payload}
+	go func() {
+		wsbot.NewSecretPush(appid, appsecret, f)
+	}()
+	if FirstStart {
+		NewBot(header, payload, b, header.XBotAppid[0])
+		FirstStart = false
+	}
+	NewBot(header, payload, b, header.XBotAppid[0])
+	if err = json.Unmarshal(b, validationPayload); err != nil {
+		log.Println("parse http payload failed:", err)
+		return
+	}
+	for len(appsecret) < ed25519.SeedSize {
+		appsecret = strings.Repeat(appsecret, 2)
+	}
+	appsecret = appsecret[:ed25519.SeedSize]
+	reader := strings.NewReader(appsecret)
+	// GenerateKey 方法会返回公钥、私钥，这里只需要私钥进行签名生成不需要返回公钥
+	_, privateKey, err := ed25519.GenerateKey(reader)
+	if err != nil {
+		log.Println("ed25519 generate key failed:", err)
+		return
+	}
+	var msg bytes.Buffer
+	msg.WriteString(validationPayload.EventTs)
+	msg.WriteString(validationPayload.PlainToken)
+	signature := hex.EncodeToString(ed25519.Sign(privateKey, msg.Bytes()))
+	if err != nil {
+		log.Println("generate signature failed:", err)
+		return
+	}
+	rspBytes, err := json.Marshal(
+		&ValidationResponse{
+			PlainToken: validationPayload.PlainToken,
+			Signature:  signature,
+		})
+	if err != nil {
+		log.Println("handle validation failed:", err)
+		return
+	}
+	c.Data(http.StatusOK, c.ContentType(), rspBytes)
+}
+
 func InitGin() {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.New()
@@ -155,7 +219,13 @@ func InitGin() {
 			fmt.Println("创建 WebSocket 失败")
 		}
 	})
+	router.GET("/qqbot/websocket",func(ctx *gin.Context) {
+		if err := wsbot.UpgradeWebsocketWithSecret(ctx.Writer, ctx.Request); err != nil {
+			fmt.Println("创建 WebSocket 失败")
+		}
+	})
 	router.POST("/qqbot/:appid", HandleValidation)
+	router.POST("/qqbot/:appid/:app_secret", HandleValidationWithAppSecret)
 
 	iport := strconv.FormatInt(int64(AllSetting.Port), 10)
 	realPort, err := RunGin(router, ":"+iport)
