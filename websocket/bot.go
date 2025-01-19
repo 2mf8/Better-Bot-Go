@@ -60,12 +60,12 @@ func NewBot(xSelfId string, addr string, conn *websocket.Conn) *Bot {
 		Bots[xSelfId][addr] = bot
 		bots.Unlock()
 	} else {
+		bots.RUnlock()
 		bots.Lock()
 		Bots[xSelfId] = map[string]*Bot{}
 		Bots[xSelfId][addr] = bot
 		bots.Unlock()
 	}
-	bots.RUnlock()
 	fmt.Printf("\n新机器人及地址已连接：%s 地址 %s\n", xSelfId, addr)
 	fmt.Println("所有机器人及地址列表：")
 	bots.RLock()
@@ -115,12 +115,12 @@ func NewSecretBot(xSelfId, xBotSecret string, addr string, conn *websocket.Conn)
 		Bots[xSelfId][addr] = bot
 		bots.Unlock()
 	} else {
+		bots.RUnlock()
 		bots.Lock()
 		Bots[xSelfId] = map[string]*Bot{}
 		Bots[xSelfId][addr] = bot
 		bots.Unlock()
 	}
-	bots.RUnlock()
 	fmt.Printf("\n新机器人及地址已连接：%s 地址 %s\n", xSelfId, addr)
 	fmt.Println("所有机器人及地址列表：")
 	bots.RLock()
