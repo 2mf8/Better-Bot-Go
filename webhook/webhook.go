@@ -42,6 +42,7 @@ var (
 )
 
 var Bots = make(map[string]*Bot)
+var bots = new(sync.RWMutex)
 
 type Bot struct {
 	QQ        uint64
@@ -347,7 +348,9 @@ func Return(c *gin.Context, resp proto.Message) {
 
 func NewBot(h *BotHeaderInfo, p *dto.WSPayload, m []byte, appId string) *Bot {
 	as := ReadSetting()
+	bots.RLock()
 	ibot, ok := Bots[appId]
+	bots.RUnlock()
 	if ok {
 		ibot.ParseWHData(h, p, m)
 	}
@@ -357,12 +360,16 @@ func NewBot(h *BotHeaderInfo, p *dto.WSPayload, m []byte, appId string) *Bot {
 		AppSecret: as.Apps[appId].AppSecret,
 		Payload:   p,
 	}
+	bots.Lock()
 	Bots[bot.AppId] = bot
+	bots.Unlock()
 	return bot
 }
 
 func NewSecretBot(h *BotHeaderInfo, p *dto.WSPayload, m []byte, appId string) *Bot {
+	bots.RLock()
 	ibot, ok := Bots[appId]
+	bots.RUnlock()
 	if ok {
 		ibot.ParseWHData(h, p, m)
 	}
@@ -370,7 +377,9 @@ func NewSecretBot(h *BotHeaderInfo, p *dto.WSPayload, m []byte, appId string) *B
 		AppId:     appId,
 		Payload:   p,
 	}
+	bots.Lock()
 	Bots[bot.AppId] = bot
+	bots.Unlock()
 	return bot
 }
 
