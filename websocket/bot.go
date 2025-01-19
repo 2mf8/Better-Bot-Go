@@ -13,6 +13,7 @@ import (
 )
 
 var Bots = make(map[string]map[string]*Bot)
+var bots = new(sync.RWMutex)
 var echo = ""
 
 type Bot struct {
@@ -25,19 +26,26 @@ type Bot struct {
 
 func NewBot(xSelfId string, addr string, conn *websocket.Conn) *Bot {
 	messageHandler := func(messageType int, data []byte) {
+		bots.RLock()
 		if _, ok := Bots[xSelfId]; ok {
 			_, ok = Bots[xSelfId][addr]
+			bots.RUnlock()
 			if !ok {
 				fmt.Printf("机器人 %s 地址 %s 已断开连接\n", xSelfId, addr)
+				bots.Lock()
 				delete(Bots[xSelfId], addr)
+				bots.Unlock()
 				_ = conn.Close()
 				return
 			}
 		}
+		bots.RUnlock()
 	}
 	closeHandler := func(code int, message string) {
 		fmt.Printf("机器人 %s 地址 %s 已断开连接\n", xSelfId, addr)
+		bots.Lock()
 		delete(Bots[xSelfId], addr)
+		bots.Unlock()
 	}
 	safeWs := NewSafeWebSocket(xSelfId, conn, messageHandler, closeHandler)
 	bot := &Bot{
@@ -45,37 +53,53 @@ func NewBot(xSelfId string, addr string, conn *websocket.Conn) *Bot {
 		Session:       safeWs,
 		WaitingFrames: make(map[string]*promise.Promise),
 	}
+	bots.RLock()
 	if _, ok := Bots[xSelfId]; ok {
+		bots.RUnlock()
+		bots.Lock()
 		Bots[xSelfId][addr] = bot
+		bots.Unlock()
 	} else {
+		bots.Lock()
 		Bots[xSelfId] = map[string]*Bot{}
 		Bots[xSelfId][addr] = bot
+		bots.Unlock()
 	}
+	bots.RUnlock()
 	fmt.Printf("\n新机器人及地址已连接：%s 地址 %s\n", xSelfId, addr)
 	fmt.Println("所有机器人及地址列表：")
+	bots.RLock()
 	for xId, xbot := range Bots {
 		for ad, _ := range xbot {
 			println(xId, ad)
 		}
 	}
+	bots.RUnlock()
 	return bot
 }
 
 func NewSecretBot(xSelfId, xBotSecret string, addr string, conn *websocket.Conn) *Bot {
 	messageHandler := func(messageType int, data []byte) {
+		bots.RLock()
 		if _, ok := Bots[xSelfId]; ok {
 			_, ok = Bots[xSelfId][addr]
+			bots.RUnlock()
 			if !ok {
 				fmt.Printf("机器人 %s 地址 %s 已断开连接\n", xSelfId, addr)
+				bots.Lock()
 				delete(Bots[xSelfId], addr)
+				bots.Unlock()
 				_ = conn.Close()
 				return
 			}
 		}
+		bots.RUnlock()
 	}
 	closeHandler := func(code int, message string) {
 		fmt.Printf("机器人 %s 地址 %s 已断开连接\n", xSelfId, addr)
+		bots.Lock()
 		delete(Bots[xSelfId], addr)
+		bots.Unlock()
 	}
 	safeWs := NewSafeWebSocket(xSelfId, conn, messageHandler, closeHandler)
 	bot := &Bot{
@@ -84,19 +108,28 @@ func NewSecretBot(xSelfId, xBotSecret string, addr string, conn *websocket.Conn)
 		Session:       safeWs,
 		WaitingFrames: make(map[string]*promise.Promise),
 	}
+	bots.RLock()
 	if _, ok := Bots[xSelfId]; ok {
+		bots.RUnlock()
+		bots.Lock()
 		Bots[xSelfId][addr] = bot
+		bots.Unlock()
 	} else {
+		bots.Lock()
 		Bots[xSelfId] = map[string]*Bot{}
 		Bots[xSelfId][addr] = bot
+		bots.Unlock()
 	}
+	bots.RUnlock()
 	fmt.Printf("\n新机器人及地址已连接：%s 地址 %s\n", xSelfId, addr)
 	fmt.Println("所有机器人及地址列表：")
+	bots.RLock()
 	for xId, xbot := range Bots {
 		for ad, _ := range xbot {
 			println(xId, ad)
 		}
 	}
+	bots.RUnlock()
 	return bot
 }
 
@@ -147,11 +180,13 @@ func NewPush(appid string, frame *onebot.Frame) error {
 	if err != nil {
 		return err
 	}
+	bots.RLock()
 	if xbot, ok := Bots[appid]; ok {
 		for _, bot := range xbot {
 			bot.Session.Send(websocket.TextMessage, data)
 		}
 	}
+	bots.RUnlock()
 	return nil
 }
 
@@ -160,6 +195,7 @@ func NewSecretPush(appid, secret string, frame *onebot.Frame) error {
 	if err != nil {
 		return err
 	}
+	bots.RLock()
 	if xbot, ok := Bots[appid]; ok {
 		for _, bot := range xbot {
 			if secret == bot.BotSecret {
@@ -167,5 +203,6 @@ func NewSecretPush(appid, secret string, frame *onebot.Frame) error {
 			}
 		}
 	}
+	bots.RUnlock()
 	return nil
 }
