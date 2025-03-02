@@ -15,7 +15,12 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
+      # 检出代码
       - uses: actions/checkout@v4
+        name: "🚚检出"
         with:
+          # 减少克隆深度
           fetch-depth: 0
+      # 执行lint
       - uses: golangci/golangci-lint-action@v6
+        name: "🔎lint"
