@@ -141,14 +141,11 @@ import (
 
 	bot1 "github.com/2mf8/Better-Bot-Go"
 	"github.com/2mf8/Better-Bot-Go/dto"
-	"github.com/2mf8/Better-Bot-Go/openapi"
 	v1 "github.com/2mf8/Better-Bot-Go/openapi/v1"
 	"github.com/2mf8/Better-Bot-Go/token"
 	"github.com/2mf8/Better-Bot-Go/webhook"
 	log "github.com/sirupsen/logrus"
 )
-
-var Apis = make(map[string]openapi.OpenAPI, 0)
 
 func main() {
 	ctx := context.WithValue(context.Background(), "key", "value")
