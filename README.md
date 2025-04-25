@@ -2,13 +2,17 @@
 
 ## 由原来的 [Go-QQ-SDK](https://github.com/2mf8/Go-QQ-SDK) 迁移过来。
 
+## 可以基于快速开发包快速开发机器人。
+
+快速开发包下载 [GoSDK](https://2mf8.cn/GoSDK.zip)
+
 ## 已支持正向 WebSocket ,正向 WebSocket 地址为 `wss://你的域名:端口/websocket` , 程序启动默认启用。
 
 示例 `wss://fw1009zb5979.vicp.fun:443/websocket`
 
 ## 对应的 WebSocket 客户端地址 [Bot-Client-Go](https://github.com/2mf8/Bot-Client-Go) ,欢迎大家使用。
 
-QQ频道机器人，官方 GOLANG SDK。
+QQ机器人，官方 GOLANG SDK。
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/2mf8/Better-Bot-Go.svg)](https://pkg.go.dev/github.com/2mf8/Better-Bot-Go)
 
@@ -131,11 +135,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
+	bot1 "github.com/2mf8/Better-Bot-Go"
 	"github.com/2mf8/Better-Bot-Go/dto"
 	"github.com/2mf8/Better-Bot-Go/openapi"
+	v1 "github.com/2mf8/Better-Bot-Go/openapi/v1"
 	"github.com/2mf8/Better-Bot-Go/token"
 	"github.com/2mf8/Better-Bot-Go/webhook"
 	log "github.com/sirupsen/logrus"
@@ -144,13 +151,24 @@ import (
 var Apis = make(map[string]openapi.OpenAPI, 0)
 
 func main() {
+	ctx := context.WithValue(context.Background(), "key", "value")
 	webhook.InitLog()
 	as := webhook.ReadSetting()
-	var ctx context.Context
-	for i, v := range as.Apps {
-		token := token.BotToken(v.AppId, v.Token, string(token.TypeBot))
-		api := bot.NewOpenAPI(token).WithTimeout(3 * time.Second)
-		Apis[i] = api
+	for _, v := range as.Apps {
+		atr := v1.GetAccessToken(fmt.Sprintf("%v", v.AppId), v.AppSecret)
+		iat, err := strconv.Atoi(atr.ExpiresIn)
+		if err == nil && atr.AccessToken != "" {
+			aei := time.Now().Unix() + int64(iat)
+			token := token.BotToken(v.AppId, atr.AccessToken, string(token.TypeQQBot))
+			if v.IsSandBox {
+				api := bot1.NewSandboxOpenAPI(token).WithTimeout(3 * time.Second)
+				go bot1.AuthAcessAdd(fmt.Sprintf("%v", v.AppId), &bot1.AccessToken{AccessToken: atr.AccessToken, ExpiresIn: aei, Api: api, AppSecret: v.AppSecret, IsSandBox: v.IsSandBox, Appid: v.AppId})
+			} else {
+				api := bot1.NewOpenAPI(token).WithTimeout(3 * time.Second)
+				go bot1.AuthAcessAdd(fmt.Sprintf("%v", v.AppId), &bot1.AccessToken{AccessToken: atr.AccessToken, ExpiresIn: aei, Api: api, AppSecret: v.AppSecret, IsSandBox: v.IsSandBox, Appid: v.AppId})
+			}
+		}
+		time.Sleep(time.Millisecond * 100)
 	}
 	b, _ := json.Marshal(as)
 	fmt.Println("配置", string(b))
@@ -162,7 +180,7 @@ func main() {
 			log.Infof("BotId(%s) GroupId(%s) UserId(%s) <- %s", bot.XBotAppid[0], data.GroupId, data.Author.UserId, data.Content)
 		}
 		if strings.TrimSpace(data.Content) == "测试" {
-			Apis[bot.XBotAppid[0]].PostGroupMessage(ctx, data.GroupId, &dto.GroupMessageToCreate{
+			bot1.SendApi(bot.XBotAppid[0]).PostGroupMessage(ctx, data.GroupId, &dto.GroupMessageToCreate{
 				Content: "成功",
 				MsgID:   data.MsgId,
 				MsgType: 0,
@@ -180,7 +198,7 @@ func main() {
 		fmt.Println(bot.XBotAppid, string(b), data.Content)
 		return nil
 	}
-	webhook.InitGin()
+	webhook.InitGin(as.IsOpen)
 	select {}
 }
 ```
