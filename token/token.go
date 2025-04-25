@@ -2,7 +2,6 @@
 package token
 
 import (
-	"fmt"
 	"io/ioutil"
 
 	"github.com/2mf8/Better-Bot-Go/log"
@@ -38,7 +37,7 @@ func BotToken(appID uint64, accessToken string, qqType string) *Token {
 	return &Token{
 		AppID:       appID,
 		AccessToken: accessToken,
-		Type:         Type(qqType),
+		Type:        Type(qqType),
 	}
 }
 
@@ -53,10 +52,7 @@ func UserToken(appID uint64, accessToken string) *Token {
 
 // GetString 获取授权头字符串
 func (t *Token) GetString() string {
-	if t.Type == TypeNormal {
-		return t.AccessToken
-	}
-	return fmt.Sprintf("%v.%s", t.AppID, t.AccessToken)
+	return t.AccessToken
 }
 
 // LoadFromConfig 从配置中读取 appid 和 token
