@@ -47,6 +47,7 @@ func SendApi(appid string) openapi.OpenAPI {
 			if gatr.AccessToken != "" {
 				iat, err := strconv.Atoi(gatr.ExpiresIn)
 				if err == nil && gatr.AccessToken != "" {
+					AuthAcess.rw.Lock()
 					aei := time.Now().Unix() + int64(iat)
 					at.ExpiresIn = aei
 					token := token.BotToken(at.Appid, gatr.AccessToken, string(token.TypeQQBot))
@@ -57,6 +58,7 @@ func SendApi(appid string) openapi.OpenAPI {
 						api := NewOpenAPI(token).WithTimeout(3 * time.Second)
 						at.Api = api
 					}
+					AuthAcess.rw.Unlock()
 					return at.Api
 				}
 			}
