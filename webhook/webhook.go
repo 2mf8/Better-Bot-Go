@@ -105,7 +105,7 @@ func HandleValidation(c *gin.Context) {
 		NewBot(header, payload, b, header.XBotAppid[0])
 		FirstStart = false
 	}
-	NewBot(header, payload, b, header.XBotAppid[0])
+	go NewBot(header, payload, b, header.XBotAppid[0])
 	if err = json.Unmarshal(b, validationPayload); err != nil {
 		log.Println("parse http payload failed:", err)
 		return
@@ -170,7 +170,7 @@ func HandleValidationWithAppSecret(c *gin.Context) {
 		NewSecretBot(header, payload, b, header.XBotAppid[0])
 		FirstStart = false
 	}
-	NewSecretBot(header, payload, b, header.XBotAppid[0])
+	go NewSecretBot(header, payload, b, header.XBotAppid[0])
 	if err = json.Unmarshal(b, validationPayload); err != nil {
 		log.Println("parse http payload failed:", err)
 		return
