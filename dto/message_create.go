@@ -48,7 +48,7 @@ type C2CMessageToCreate struct {
 	MessageReference *MessageReference         `json:"message_reference,omitempty"`
 	EventID          EventType                 `json:"event_id,omitempty"` // 要回复的事件id, 逻辑同MsgID
 	MsgID            string                    `json:"msg_id,omitempty"`
-	MsgSeq           uint                      `json:"msgseq,omitempty"`
+	MsgSeq           uint                      `json:"msg_seq,omitempty"`
 }
 
 type FileInfo struct {
