@@ -186,7 +186,7 @@ func (r *MarkDown) CmdEnter(text string) *MarkDown {
 // 客户端展示为： /参数指令 用户可点击的标签
 // isTrue 为 true 或 false
 func (r *MarkDown) CmdInput(text, show, isTrue string) *MarkDown {
-	str := fmt.Sprintf("<qqbot-cmd-input text=\"%s\" show=\"%s\" reference\"%s\" />", text, show, isTrue)
+	str := fmt.Sprintf("<qqbot-cmd-input text=\"%s\" show=\"%s\" reference=\"%s\" />", text, show, isTrue)
 	r.Str += str
 	return r
 }
