@@ -46,7 +46,7 @@ type GroupMessage struct {
 	MsgScene    *MsgSceneContent     `json:"message_scene"`
 	Author      *Author              `json:"author"`
 	Timestamp   Timestamp            `json:"timestamp"`
-	MsgType     uint32               `json:"msg_type"`
+	MsgType     uint32               `json:"message_type"`
 	Attachments []*MessageAttachment `json:"attachments"`
 }
 type MsgSceneContent struct {
@@ -73,12 +73,19 @@ type C2CAtachment struct {
 }
 
 type C2CAuthor struct {
-	UserOpenId string `json:"user_openid"`
+	UserOpenId  string `json:"user_openid"`
+	Bot         bool   `json:"bot,omitempty"`
+	UserId      string `json:"id,omitempty"`
+	UnionOpenId string `json:"union_openid,omitempty"`
+	UserName    string `json:"username"`
 }
 
 type Author struct {
-	UserId     string `json:"id"`
-	UserOpenId string `json:"member_openid"`
+	Bot         bool   `json:"bot,omitempty"`
+	UserId      string `json:"id,omitempty"`
+	UserOpenId  string `json:"member_openid,omitempty"`
+	UnionOpenId string `json:"union_openid,omitempty"`
+	UserName    string `json:"username"`
 }
 
 // Embed 结构
