@@ -1,5 +1,11 @@
 package keyboard
 
+import "fmt"
+
+var AutoId int = 0
+
+var Buttons = make([]*Button, 0)
+
 // ActionType 按钮操作类型
 type ActionType uint32
 
@@ -32,7 +38,7 @@ type MessageKeyboard struct {
 // CustomKeyboard 自定义 Keyboard
 type CustomKeyboard struct {
 	BotAppId uint64 `json:"bot_appid,omitempty"`
-	Rows []*Row `json:"rows,omitempty"` // 行数组
+	Rows     []*Row `json:"rows,omitempty"` // 行数组
 }
 
 // Row 每行结构
@@ -56,11 +62,13 @@ type RenderData struct {
 
 // Action 按纽点击操作
 type Action struct {
-	Type                 ActionType  `json:"type,omitempty"`                     // 操作类型
-	Permission           *Permission `son:"permission,omitempty"`                // 可操作
-	ClickLimit           uint32      `json:"click_limit,omitempty"`              // 可点击的次数, 默认不限
-	Data                 string      `json:"data,omitempty"`                     // 操作相关数据
-	AtBotShowChannelList bool        `json:"at_bot_show_channel_list,omitempty"` // false:当前 true:弹出展示子频道选择器
+	Type                 ActionType  `json:"type,omitempty"`           // 操作类型
+	Permission           *Permission `json:"permission,omitempty"`     // 可操作
+	UnsupportTips        string      `json:"unsupport_tips,omitempty"` // 可点击的次数, 默认不限
+	Data                 string      `json:"data,omitempty"`           // 操作相关数据
+	Reply                bool        `json:"reply,omitempty"`          // false:当前 true:弹出展示子频道选择器
+	Enter                bool        `json:"enter,omitempty"`
+	AtBotShowChannelList bool        `json:"at_bot_show_channel_list,omitempty"`
 }
 
 // Permission 按纽操作权限
@@ -71,4 +79,154 @@ type Permission struct {
 	SpecifyRoleIDs []string `json:"specify_role_ids,omitempty"`
 	// SpecifyUserIDs 指定 UserID
 	SpecifyUserIDs []string `json:"specify_user_ids,omitempty"`
+}
+
+func Builder(appid uint64) *CustomKeyboard {
+	return &CustomKeyboard{
+		BotAppId: appid,
+		Rows:     make([]*Row, 0),
+	}
+}
+
+// 通用按钮，自由度最高
+func (c *CustomKeyboard) Button(label, visitedLabel, data string, style, actionType, permissionType int, reply, enter, atBotShowChannelList bool) *CustomKeyboard {
+	AutoId++
+	id := fmt.Sprintf("%v", AutoId)
+	button := &Button{
+		ID: id,
+		RenderData: &RenderData{
+			Label:        label,
+			VisitedLabel: visitedLabel,
+			Style:        style,
+		},
+		Action: &Action{
+			Type: ActionType(actionType),
+			Permission: &Permission{
+				Type: PermissionType(permissionType),
+			},
+			Data:                 data,
+			Reply:                reply,
+			Enter:                enter,
+			AtBotShowChannelList: atBotShowChannelList,
+		},
+	}
+	Buttons = append(Buttons, button)
+	return c
+}
+
+// 文本按钮，所有人可用
+func (c *CustomKeyboard) TextButton(label, visitedLabel, data string, reply, enter bool) *CustomKeyboard {
+	AutoId++
+	id := fmt.Sprintf("%v", AutoId)
+	button := &Button{
+		ID: id,
+		RenderData: &RenderData{
+			Label:        label,
+			VisitedLabel: visitedLabel,
+			Style:        0,
+		},
+		Action: &Action{
+			Type: ActionTypeAtBot,
+			Permission: &Permission{
+				Type: PermissionTypAll,
+			},
+			Data:                 data,
+			Reply:                reply,
+			Enter:                enter,
+			AtBotShowChannelList: false,
+		},
+	}
+	Buttons = append(Buttons, button)
+	return c
+}
+
+// 文本按钮，管理可用
+func (c *CustomKeyboard) TextButtonAdmin(label, visitedLabel, data string, reply, enter bool) *CustomKeyboard {
+	AutoId++
+	id := fmt.Sprintf("%v", AutoId)
+	button := &Button{
+		ID: id,
+		RenderData: &RenderData{
+			Label:        label,
+			VisitedLabel: visitedLabel,
+			Style:        0,
+		},
+		Action: &Action{
+			Type: ActionTypeAtBot,
+			Permission: &Permission{
+				Type: PermissionTypManager,
+			},
+			Data:                 data,
+			Reply:                reply,
+			Enter:                enter,
+			AtBotShowChannelList: false,
+		},
+	}
+	Buttons = append(Buttons, button)
+	return c
+}
+
+// 链接按钮，所有人可用
+func (c *CustomKeyboard) UrlButton(label, visitedLabel, url string, reply, enter bool) *CustomKeyboard {
+	AutoId++
+	id := fmt.Sprintf("%v", AutoId)
+	button := &Button{
+		ID: id,
+		RenderData: &RenderData{
+			Label:        label,
+			VisitedLabel: visitedLabel,
+			Style:        0,
+		},
+		Action: &Action{
+			Type: ActionTypeURL,
+			Permission: &Permission{
+				Type: PermissionTypAll,
+			},
+			Data:                 url,
+			Reply:                reply,
+			Enter:                enter,
+			AtBotShowChannelList: false,
+		},
+	}
+	Buttons = append(Buttons, button)
+	return c
+}
+
+// 链接按钮，管理可用
+func (c *CustomKeyboard) UrlButtonAdmin(label, visitedLabel, url string, reply, enter bool) *CustomKeyboard {
+	AutoId++
+	id := fmt.Sprintf("%v", AutoId)
+	button := &Button{
+		ID: id,
+		RenderData: &RenderData{
+			Label:        label,
+			VisitedLabel: visitedLabel,
+			Style:        0,
+		},
+		Action: &Action{
+			Type: ActionTypeURL,
+			Permission: &Permission{
+				Type: PermissionTypManager,
+			},
+			Data:                 url,
+			Reply:                reply,
+			Enter:                enter,
+			AtBotShowChannelList: false,
+		},
+	}
+	Buttons = append(Buttons, button)
+	return c
+}
+
+func (c *CustomKeyboard) SetRow() *CustomKeyboard {
+	row := &Row{
+		Buttons: Buttons,
+	}
+	c.Rows = append(c.Rows, row)
+	Buttons = []*Button{}
+	return c
+}
+
+func (c *CustomKeyboard) ResetAutoId() {
+	AutoId = 0
 }
