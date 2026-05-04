@@ -1,7 +1,5 @@
 package dto
 
-import "encoding/json"
-
 // Interaction 互动行为对象
 type Interaction struct {
 	ID                string           `json:"id,omitempty"`             // 互动行为唯一标识
@@ -33,7 +31,12 @@ const (
 type InteractionData struct {
 	Name     string              `json:"name,omitempty"`     // 标题
 	Type     InteractionDataType `json:"type,omitempty"`     //	数据类型，不同数据类型对应不同的 resolved 数据
-	Resolved json.RawMessage     `json:"resolved,omitempty"` // 跟不同的互动类型和数据类型有关系的数据
+	Resolved ResolvedContent     `json:"resolved,omitempty"` // 跟不同的互动类型和数据类型有关系的数据
+}
+
+type ResolvedContent struct {
+	ButtonData string `json:"button_data,omitempty"`
+	ButtonId   string `json:"button_id,omitempty"`
 }
 
 // InteractionDataType 互动数据类型
