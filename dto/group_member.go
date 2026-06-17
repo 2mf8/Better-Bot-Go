@@ -13,3 +13,9 @@ type GroupMember struct {
 	MemberOpenId  string `json:"member_openid,omitempty"`
 	JoinTimeStamp int64  `json:"join_timestamp,omitempty"`
 }
+
+type GroupMemberChange struct {
+	GroupOpenId  string `json:"group_openid,omitempty"`
+	MemberOpenId string `json:"member_openid,omitempty"`
+	Timestamp    int64  `json:"timestamp,omitempty"`
+}

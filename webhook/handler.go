@@ -70,6 +70,10 @@ var GroupAtMessageEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, da
 
 var GroupMessageEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSGroupMessageData) error
 
+var GroupMemberAddHander func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSGroupMemberAddData) error
+
+var GroupMemberRemoveHander func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSGroupMemberRemoveData) error
+
 var C2CMessageEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSC2CMessageData) error
 
 var GroupAddRobotEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSGroupAddRobotData) error

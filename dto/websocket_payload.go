@@ -82,6 +82,10 @@ type WSGroupATMessageData GroupMessage
 
 type WSGroupMessageData GroupMessage
 
+type WSGroupMemberAddData GroupMemberChange
+
+type WSGroupMemberRemoveData GroupMemberChange
+
 // WSMessageDeleteData 消息 payload
 type WSMessageDeleteData MessageDelete
 

@@ -374,8 +374,8 @@ func NewSecretBot(h *BotHeaderInfo, p *dto.WSPayload, m []byte, appId string) *B
 		ibot.ParseWHData(h, p, m)
 	}
 	bot := &Bot{
-		AppId:     appId,
-		Payload:   p,
+		AppId:   appId,
+		Payload: p,
 	}
 	bots.Lock()
 	Bots[bot.AppId] = bot
@@ -394,6 +394,27 @@ func (bot *Bot) ParseWHData(h *BotHeaderInfo, p *dto.WSPayload, message []byte) 
 		err := json.Unmarshal(message, gm)
 		if err == nil {
 			GroupAtMessageEventHandler(h, p, gm)
+		}
+	}
+	if p.Type == dto.EventGroupMessageCreate {
+		gm := &dto.WSGroupMessageData{}
+		err := json.Unmarshal(message, gm)
+		if err == nil {
+			GroupMessageEventHandler(h, p, gm)
+		}
+	}
+	if p.Type == dto.EventGroupMemberAdd {
+		gma := &dto.WSGroupMemberAddData{}
+		err := json.Unmarshal(message, gma)
+		if err == nil {
+			GroupMemberAddHander(h, p, gma)
+		}
+	}
+	if p.Type == dto.EventGroupMemberRemove {
+		gmr := &dto.WSGroupMemberRemoveData{}
+		err := json.Unmarshal(message, gmr)
+		if err == nil {
+			GroupMemberRemoveHander(h, p, gmr)
 		}
 	}
 	if p.Type == dto.EventGroupAddRobot {

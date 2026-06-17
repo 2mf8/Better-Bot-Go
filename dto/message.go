@@ -84,6 +84,7 @@ type Author struct {
 	Bot         bool   `json:"bot,omitempty"`
 	UserId      string `json:"id,omitempty"`
 	UserOpenId  string `json:"member_openid,omitempty"`
+	MemberRole  string `json:"member_role,omitempty"`
 	UnionOpenId string `json:"union_openid,omitempty"`
 	UserName    string `json:"username"`
 }

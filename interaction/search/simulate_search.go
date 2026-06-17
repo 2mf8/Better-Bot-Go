@@ -1,19 +1,5 @@
 package search
 
-import (
-	"bytes"
-	"encoding/json"
-	"io"
-	"io/ioutil"
-	"net/http"
-	"strconv"
-	"time"
-
-	"github.com/2mf8/Better-Bot-Go/dto"
-	"github.com/2mf8/Better-Bot-Go/interaction/signature"
-	"github.com/2mf8/Better-Bot-Go/log"
-)
-
 const maxRespBuffer = 65535
 
 // Config 搜索请求配置
@@ -25,7 +11,7 @@ type Config struct {
 
 // SimulateSearch 模拟内联搜索请求
 // 开发者可以使用本方法请求自己的服务器进行平台内联搜索的模拟，避免在平台上触发搜索请求。提升联调效率。
-func SimulateSearch(config *Config, keyword string) (*dto.SearchRsp, error) {
+/* func SimulateSearch(config *Config, keyword string) (*dto.SearchRsp, error) {
 	interactionData := &dto.InteractionData{
 		Name: "search",
 		Type: dto.InteractionDataTypeChatSearch,
@@ -81,3 +67,4 @@ func SimulateSearch(config *Config, keyword string) (*dto.SearchRsp, error) {
 
 	return result, nil
 }
+*/
