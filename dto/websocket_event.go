@@ -49,7 +49,7 @@ const (
 	EventFriendDel             EventType = "FRIEND_DEL"
 	EventC2CMsgReject          EventType = "C2C_MSG_REJECT"
 	EventC2CMsgReceive         EventType = "C2C_MSG_RECEIVE"
-	EventGroupMemberAdd        EventType = "GROUP_MEMBER_Add"
+	EventGroupMemberAdd        EventType = "GROUP_MEMBER_ADD"
 	EventGroupMemberRemove     EventType = "GROUP_MEMBER_REMOVE"
 )
 
