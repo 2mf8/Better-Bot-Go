@@ -3,7 +3,6 @@ package v1
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/2mf8/Better-Bot-Go/dto"
 	"github.com/2mf8/Better-Bot-Go/errs"
@@ -122,13 +121,4 @@ func (o *openAPI) DeleteGuildMember(ctx context.Context, guildID, userID string,
 		SetBody(opt).
 		Delete(o.getURL(guildMemberURI))
 	return err
-}
-
-func (o *openAPI) GroupMembersGet(ctx context.Context, group string) error {
-	resp, err := o.request(ctx).SetPathParam("group_openid", group).Get(o.getURL(groupMembersGet))
-	if err != nil {
-		return err
-	}
-	fmt.Println(string(resp.Body()))
-	return nil
 }

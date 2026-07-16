@@ -78,11 +78,11 @@ type MessageAPI interface {
 	PostGroupRichMediaMessage(ctx context.Context, groupId string, msg *dto.GroupRichMediaMessageToCreate) (*dto.RichMediaMsgResp, error)
 	PostC2CRichMediaMessage(ctx context.Context, userId string, msg *dto.C2CRichMediaMessageToCreate) (*dto.RichMediaMsgResp, error)
 	RetractMessage(ctx context.Context, channelID, msgID string, options ...RetractMessageOption) error
-	GroupMembersGet(ctx context.Context, group string) error
 	// PostSettingGuide 发送设置引导
 	PostSettingGuide(ctx context.Context, channelID string, atUserIDs []string) (*dto.Message, error)
-	DelC2CMessage(ctx context.Context, userID, msgID string, options ...RetractMessageOption) error
-	DelGroupBotMessage(ctx context.Context, groupID, msgID string, options ...RetractMessageOption) error
+	RetractC2CMessage(ctx context.Context, userID, msgID string, options ...RetractMessageOption) error
+	RetractGroupBotMessage(ctx context.Context, groupID, msgID string, options ...RetractMessageOption) error
+	RetractGroupMessage(ctx context.Context, groupID, msgID string, options ...RetractMessageOption) (dto.RetractMessageResp,error)
 }
 
 // GuildAPI guild 相关接口

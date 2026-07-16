@@ -120,3 +120,10 @@ type MessageReactionUsers struct {
 	Cookie string  `json:"cookie,omitempty"`
 	IsEnd  bool    `json:"is_end,omitempty"`
 }
+
+type RetractMessageResp struct {
+	Message string `json:"message,omitempty"`
+	Code    int64  `json:"code,omitempty"`
+	ErrCode int64  `json:"err_code,omitempty"`
+	TraceId string `json:"trace_id,omitempty"`
+}

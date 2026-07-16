@@ -185,7 +185,7 @@ func (o *openAPI) RetractMessage(ctx context.Context,
 }
 
 // DelC2CMessage 撤回C2C机器人2分钟内发出的消息
-func (o *openAPI) DelC2CMessage(ctx context.Context,
+func (o *openAPI) RetractC2CMessage(ctx context.Context,
 	userID, msgID string, options ...openapi.RetractMessageOption) error {
 	request := o.request(ctx).
 		SetPathParam("openid", userID).
@@ -200,7 +200,7 @@ func (o *openAPI) DelC2CMessage(ctx context.Context,
 }
 
 // DelGroupBotMessage 撤回机器人2分钟内发出的群聊消息
-func (o *openAPI) DelGroupBotMessage(ctx context.Context,
+func (o *openAPI) RetractGroupBotMessage(ctx context.Context,
 	groupID, msgID string, options ...openapi.RetractMessageOption) error {
 	request := o.request(ctx).
 		SetPathParam("group_openid", groupID).
@@ -212,6 +212,23 @@ func (o *openAPI) DelGroupBotMessage(ctx context.Context,
 	}
 	_, err := request.Delete(o.getURL(groupBotMessageDelUri))
 	return err
+}
+
+// DelGroupMessage 撤回群成员发出的群聊消息（机器人需为管理）
+func (o *openAPI) RetractGroupMessage(ctx context.Context,
+	groupID, msgID string, options ...openapi.RetractMessageOption) (dto.RetractMessageResp, error) {
+	dmr := &dto.RetractMessageResp{}
+	request := o.request(ctx).
+		SetPathParam("group_openid", groupID).
+		SetPathParam("message_id", string(msgID))
+	for _, option := range options {
+		if option == openapi.RetractMessageOptionHidetip {
+			request = request.SetQueryParam("hidetip", "true")
+		}
+	}
+	resp, err := request.Delete(o.getURL(groupBotMessageDelUri))
+	json.Unmarshal(resp.Body(), &dmr)
+	return *dmr, err
 }
 
 // PostSettingGuide 发送设置引导消息, atUserID为要at的用户
@@ -233,4 +250,8 @@ func (o *openAPI) PostSettingGuide(ctx context.Context,
 		return nil, err
 	}
 	return resp.Result().(*dto.Message), nil
+}
+
+func (o *openAPI) RevokeGroupMessage(ctx context.Context, groupId, messageId string) {
+
 }
