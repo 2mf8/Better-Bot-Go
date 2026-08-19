@@ -51,6 +51,7 @@ const (
 	EventC2CMsgReceive         EventType = "C2C_MSG_RECEIVE"
 	EventGroupMemberAdd        EventType = "GROUP_MEMBER_ADD"
 	EventGroupMemberRemove     EventType = "GROUP_MEMBER_REMOVE"
+	EventGroupJoinRequest      EventType = "GROUP_JOIN_REQUEST"
 )
 
 // intentEventMap 不同 intent 对应的事件定义
@@ -70,8 +71,9 @@ var intentEventMap = map[Intent][]EventType{
 		EventForumThreadCreate, EventForumThreadUpdate, EventForumThreadDelete, EventForumPostCreate,
 		EventForumPostDelete, EventForumReplyCreate, EventForumReplyDelete, EventForumAuditResult,
 	},
-	IntentInteraction: {EventInteractionCreate},
-	IntentQQ:          {EventC2CMessageCreate, EventC2CMsgReceive, EventC2CMsgReject, EventGroupATMessageCreate, EventGroupMessageCreate, EventGroupAddRobot, EventGroupDelRobot, EventGroupMsgReceive, EventGroupMsgReject, EventFriendAdd, EventFriendDel, EventGroupMemberAdd, EventGroupMemberRemove},
+	IntentInteraction:  {EventInteractionCreate},
+	IntentQQ:           {EventC2CMessageCreate, EventC2CMsgReceive, EventC2CMsgReject, EventGroupATMessageCreate, EventGroupMessageCreate, EventGroupAddRobot, EventGroupDelRobot, EventGroupMsgReceive, EventGroupMsgReject, EventFriendAdd, EventFriendDel, EventGroupJoinRequest},
+	IntentMemberChange: {EventGroupMemberAdd, EventGroupMemberRemove},
 }
 
 var eventIntentMap = transposeIntentEventMap(intentEventMap)

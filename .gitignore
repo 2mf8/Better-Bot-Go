@@ -24,3 +24,6 @@ demo
 *.toml
 setting/
 main.go
+botgo.go
+register.go
+session_manager.go

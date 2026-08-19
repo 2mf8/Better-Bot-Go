@@ -18,4 +18,5 @@ type GroupMemberChange struct {
 	GroupOpenId  string `json:"group_openid,omitempty"`
 	MemberOpenId string `json:"member_openid,omitempty"`
 	Timestamp    int64  `json:"timestamp,omitempty"`
+	UserOpenId   string `json:"user_openid,omitempty"`
 }

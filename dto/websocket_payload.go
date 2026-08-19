@@ -134,3 +134,5 @@ type WSFriendDelData FriendDelEvent
 type WSFriendMsgRejectData FriendMsgRejectEvent
 
 type WSFriendMsgReveiceData FriendMsgReceiveEvent
+
+type WSGroupJoinRequestData GroupJoinRequestEvent

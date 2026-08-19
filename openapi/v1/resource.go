@@ -30,6 +30,13 @@ const (
 	groupBotMessageDelUri      uri = "/v2/groups/{group_openid}/messages/{message_id}"
 	privateBotMessageDelUri    uri = "/v2/users/{openid}/messages/{message_id}"
 
+	groupInfoUri               uri = "/v2/groups/{group_openid}/info"
+	groupBotStatusUri          uri = "/v2/groups/{group_openid}/bot_state"
+	groupJoinRequestListUri    uri = "/v2/groups/{group_openid}/join_request_list"
+	groupJoinRequestApproveUri uri = "/v2/groups/{group_openid}/approval_join_request/{member_openid}"
+	groupRestrictChatStatusUri uri = "/v2/groups/{group_openid}/restrict_chat_setting"
+	groupRestrictChatSetUri    uri = "/v2/groups/{group_openid}/restrict_chat_setting"
+
 	guildURI            uri = "/guilds/{guild_id}"
 	guildMembersURI     uri = "/guilds/{guild_id}/members"
 	guildMemberURI      uri = "/guilds/{guild_id}/members/{user_id}"
