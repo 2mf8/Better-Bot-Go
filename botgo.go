@@ -12,6 +12,7 @@ import (
 	"github.com/2mf8/Better-Bot-Go/openapi"
 	v1 "github.com/2mf8/Better-Bot-Go/openapi/v1"
 	"github.com/2mf8/Better-Bot-Go/token"
+	"github.com/2mf8/Better-Bot-Go/websocket2/client"
 )
 
 var AuthAcess = &AccessConfig{
@@ -69,7 +70,12 @@ func SendApi(appid string) openapi.OpenAPI {
 }
 
 func init() {
-	v1.Setup() // 注册 v1 接口
+	v1.Setup()     // 注册 v1 接口
+	client.Setup() // 注册 websocket client 实现
+}
+
+func NewSessionManager() SessionManager {
+	return defaultSessionManager
 }
 
 // SelectOpenAPIVersion 指定使用哪个版本的 api 实现，如果不指定，sdk将默认使用第一个 setup 的 api 实现

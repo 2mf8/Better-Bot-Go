@@ -43,6 +43,7 @@ const (
 	IntentDirectMessageReactions
 	IntentDirectMessageTyping
 
+	//MemberChange Intent = 1 << 24
 	// IntentQQ 包含
 	// - C2C_MESSAGE_CREATE
 	// - GROUP_AT_MESSAGE_CREATE

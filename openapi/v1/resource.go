@@ -10,7 +10,7 @@ import (
 	"github.com/2mf8/Better-Bot-Go/dto"
 )
 
-const domain = "api.sgroup.qq.com"
+const domain = "api.bot.qq.com"
 const sandBoxDomain = "sandbox.api.sgroup.qq.com"
 const getAppAccessTokenDomain = "https://bots.qq.com"
 

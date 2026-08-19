@@ -2,6 +2,7 @@
 package token
 
 import (
+	"fmt"
 	"io/ioutil"
 
 	"github.com/2mf8/Better-Bot-Go/log"
@@ -53,6 +54,10 @@ func UserToken(appID uint64, accessToken string) *Token {
 // GetString 获取授权头字符串
 func (t *Token) GetString() string {
 	return t.AccessToken
+}
+
+func (t *Token) GetAccessString() string {
+	return fmt.Sprintf("QQBot %s", t.AccessToken)
 }
 
 // LoadFromConfig 从配置中读取 appid 和 token
