@@ -1,5 +1,79 @@
-# Better-Bot-Go
+# Better-Bot-Go WebSocket 方式使用
+# [QQ交流群 677742758](https://qm.qq.com/q/okWktIaAqk)
+```golang
+package main
 
+import (
+	"context"
+	"fmt"
+	"log"
+	"strconv"
+	"time"
+
+	"github.com/2mf8/Better-Bot-Go/dto"
+	"github.com/2mf8/Better-Bot-Go/event"
+	v1 "github.com/2mf8/Better-Bot-Go/openapi/v1"
+	"github.com/2mf8/Better-Bot-Go/token"
+	"github.com/2mf8/Better-Bot-Go/webhook"
+	"github.com/2mf8/Better-Bot-Go/websocket2"
+)
+
+// 仅供参考，可自由修改成适合你自己的
+
+var botId = "AppId" // 你的AppId
+
+func main() {
+	webhook.InitLog()
+	ctx := context.Background()
+	as := webhook.ReadSetting()
+	for _, v := range as.Apps {
+		atr := v1.GetAccessToken(fmt.Sprintf("%v", v.AppId), v.AppSecret)
+		iat, err := strconv.Atoi(atr.ExpiresIn)
+		if err == nil && atr.AccessToken != "" {
+			aei := time.Now().Unix() + int64(iat)
+			token := token.BotToken(v.AppId, atr.AccessToken, string(token.TypeQQBot))
+			if v.IsSandBox {
+				api := NewSandboxOpenAPI(token).WithTimeout(3 * time.Second)
+				go AuthAcessAdd(fmt.Sprintf("%v", v.AppId), &AccessToken{AccessToken: atr.AccessToken, ExpiresIn: aei, Api: api, AppSecret: v.AppSecret, IsSandBox: v.IsSandBox, Appid: v.AppId})
+			} else {
+				api := NewOpenAPI(token).WithTimeout(3 * time.Second)
+				go AuthAcessAdd(fmt.Sprintf("%v", v.AppId), &AccessToken{AccessToken: atr.AccessToken, ExpiresIn: aei, Api: api, AppSecret: v.AppSecret, IsSandBox: v.IsSandBox, Appid: v.AppId})
+			}
+		}
+		time.Sleep(time.Millisecond * 100)
+	}
+	at, ok := AuthAcess.Config[botId]
+	if ok {
+		botId = fmt.Sprintf("%v", at.Appid)
+		itoken := token.BotToken(at.Appid, at.AccessToken, string(token.TypeQQBot))
+		api := NewOpenAPI(itoken).WithTimeout(3 * time.Second)
+		wsInfo, err := api.WS(ctx, nil, "")
+		if err != nil {
+			log.Fatalln(err)
+		}
+		intent := websocket2.RegisterHandlers(ATMessageEventHandler())
+		if err = NewSessionManager().Start(wsInfo, itoken, &intent); err != nil {
+			log.Fatalln(err)
+		}
+	}
+}
+
+func ATMessageEventHandler() event.GroupMessageEventHandler {
+	return func(event *dto.WSPayload, data *dto.WSGroupMessageData) error {
+		newMsg := &dto.GroupMessageToCreate{
+			Content: "测试成功",
+			MsgType: dto.C2CMsgTypeText,
+			MsgID:   data.MsgId,
+			MsgSeq:  4,
+		}
+		SendApi(botId).PostGroupMessage(context.Background(), data.GroupId, newMsg)
+		return nil
+	}
+}
+
+```
+
+# Better-Bot-Go WebHook 方式使用
 ## 由原来的 [Go-QQ-SDK](https://github.com/2mf8/Go-QQ-SDK) 迁移过来。
 
 ## 可以基于快速开发包快速开发机器人。
