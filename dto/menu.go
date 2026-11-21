@@ -68,7 +68,7 @@ type PanelsGetResp struct {
 }
 
 type PanelsSetReq struct {
-	Scope        string   `json:"scope,omitempty"`
+	Scope        string   `json:"scope,omitempty"` // 必填
 	TargetType   string   `json:"target_type,omitempty"`
 	UserOpenids  []string `json:"user_openids,omitempty"`
 	GroupOpenids []string `json:"group_openids,omitempty"`
@@ -82,7 +82,7 @@ type PanelsSetReq struct {
 		} `json:"items,omitempty"`
 		Remark  string `json:"remark,omitempty"`
 		Version int    `json:"version,omitempty"`
-	} `json:"panel,omitempty"`
+	} `json:"panel,omitempty"` // 必填
 }
 
 type PanelsSetResp struct {
@@ -122,7 +122,7 @@ type PanelSetReq struct {
 		} `json:"items,omitempty"`
 		Remark  string `json:"remark,omitempty"`
 		Version int    `json:"version,omitempty"`
-	} `json:"panel,omitempty"`
+	} `json:"panel,omitempty"` // 必填
 }
 
 type PanelSetResp struct {
@@ -133,7 +133,7 @@ type PanelDelResp struct {
 }
 
 type PanelTargetSetReq struct {
-	Op           string   `json:"op,omitempty"`
+	Op           string   `json:"op,omitempty"` // 必填
 	UserOpenids  []string `json:"user_openids,omitempty"`
 	GroupOpenids []string `json:"group_openids,omitempty"`
 }

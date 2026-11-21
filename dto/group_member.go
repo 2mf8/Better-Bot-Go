@@ -63,8 +63,8 @@ type BlackListUser struct {
 }
 
 type BlackListUserSetReq struct {
-	Op            string   `json:"op,omitempty"`
-	MemberOpenids []string `json:"member_openids,omitempty"`
+	Op            string   `json:"op,omitempty"` // 必填
+	MemberOpenids []string `json:"member_openids,omitempty"` // 必填
 }
 
 type BlackListUserSetResp struct {

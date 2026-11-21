@@ -155,9 +155,9 @@ type MuteSetReq struct {
 }
 
 type SetMemberMuteState struct {
-	Op           string `json:"op,omitempty"`
-	MemberOpenId string `json:"member_openid,omitempty"`
-	MuteExpireAt string `json:"mute_expire_at,omitempty"`
+	Op           string `json:"op,omitempty"` // 必填
+	MemberOpenId string `json:"member_openid,omitempty"` // 必填
+	MuteExpireAt string `json:"mute_expire_at,omitempty"` // 必填
 }
 
 type MuteSetResp struct{}
@@ -222,8 +222,8 @@ type GroupJoinApprovalStrategyExeReq struct{}
 type GroupJoinApprovalStrategyExeResp struct{}
 
 type WhiteListUsersSetReq struct {
-	Op             string   `json:"op,omitempty"`
-	WhiteListUsers []string `json:"whitelist_users,omitempty"`
+	Op             string   `json:"op,omitempty"` // 必填
+	WhiteListUsers []string `json:"whitelist_users,omitempty"` // 必填
 }
 
 type WhiteListUsersSetResp struct {

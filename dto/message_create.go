@@ -29,7 +29,8 @@ type C2CMessageToCreate struct {
 	Content          string                    `json:"content,omitempty"`
 	MsgType          C2CMsgType                `json:"msg_type,omitempty"`
 	Markdown         *Markdown                 `json:"markdown,omitempty"`
-	Keyboard         *keyboard.MessageKeyboard `json:"keyboard,omitempty"` // 消息按钮组件
+	Keyboard         *keyboard.MessageKeyboard `json:"keyboard,omitempty"`        // 消息按钮组件
+	PromptKeyboard   *PromptKeyboard           `json:"prompt_keyboard,omitempty"` // 消息扩展信息
 	Media            *FileInfo                 `json:"media,omitempty"`
 	Ark              *Ark                      `json:"ark,omitempty"` // 已失效
 	Image            string                    `json:"image,omitempty"`
@@ -39,7 +40,22 @@ type C2CMessageToCreate struct {
 	MsgSeq           uint                      `json:"msg_seq,omitempty"`
 	IsWakeUp         bool                      `json:"is_wakeup,omitempty"`
 	Card             *MessageCard              `json:"card,omitempty"`
+	ActionButton     *ActionButton             `json:"action_button,omitempty"` // 消息操作结构
 	InputNotify      *InputNotify              `json:"input_notify,omitempty"`
+}
+
+// ActionButton 消息操作按钮
+type ActionButton struct {
+	TemplateID   int32  `json:"template_id,omitempty"`   // 消息操作栏模块ID，与下面具体具体按钮二选一填写。待废弃字段！！！
+	CallbackData string `json:"callback_data,omitempty"` // 用户操作时会回调通过回调事件给到button_data中， 最长不超过128个字符。
+	Feedback     bool   `json:"feedback,omitempty"`      // 反馈按钮（赞踩按钮）
+	TTS          bool   `json:"tts,omitempty"`           // TTS语音播放按钮
+	ReGenerate   bool   `json:"re_generate,omitempty"`   // 重新生成按钮
+	StopGenerate bool   `json:"stop_generate,omitempty"` // 停止生成按钮
+}
+
+type PromptKeyboard struct {
+	Keyboard *keyboard.MessageKeyboard `json:"keyboard,omitempty"` // 消息按钮组件
 }
 
 type MessageCard struct {
