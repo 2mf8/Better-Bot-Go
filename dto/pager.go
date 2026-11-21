@@ -8,8 +8,8 @@ type Pager interface {
 
 // GuildMembersPager 分页器
 type GuildMembersPager struct {
-	After string `json:"after"` // 读此id之后的数据，如果是第一次请求填0，默认为0
-	Limit string `json:"limit"` // 分页大小，1-1000，默认是1
+	After string `json:"after,omitempty"` // 读此id之后的数据，如果是第一次请求填0，默认为0
+	Limit string `json:"limit,omitempty"` // 分页大小，1-1000，默认是1
 }
 
 // QueryParams 转换为 query 参数
@@ -26,8 +26,8 @@ func (g *GuildMembersPager) QueryParams() map[string]string {
 
 // GuildRoleMembersPager 分页器
 type GuildRoleMembersPager struct {
-	StartIndex string `json:"start_index"`
-	Limit      string `json:"limit"`
+	StartIndex string `json:"start_index,omitempty"`
+	Limit      string `json:"limit,omitempty"`
 }
 
 // QueryParams 转换为 query 参数
@@ -44,9 +44,9 @@ func (g *GuildRoleMembersPager) QueryParams() map[string]string {
 
 // GuildPager 分页器
 type GuildPager struct {
-	Before string `json:"before"` // 读此id之前的数据
-	After  string `json:"after"`  // 读此id之后的数据
-	Limit  string `json:"limit"`  // 分页大小，1-100，默认是 100
+	Before string `json:"before,omitempty"` // 读此id之前的数据
+	After  string `json:"after,omitempty"`  // 读此id之后的数据
+	Limit  string `json:"limit,omitempty"`  // 分页大小，1-100，默认是 100
 }
 
 // QueryParams 转换为 query 参数
@@ -69,7 +69,7 @@ func (g *GuildPager) QueryParams() map[string]string {
 type MessagesPager struct {
 	Type  MessagePagerType // 拉取类型
 	ID    string           // 消息ID
-	Limit string           `json:"limit"` // 最大 20
+	Limit string           `json:"limit,omitempty"` // 最大 20
 }
 
 // QueryParams 转换为 query 参数
@@ -86,8 +86,8 @@ func (m *MessagesPager) QueryParams() map[string]string {
 
 // MessageReactionPager 分页器
 type MessageReactionPager struct {
-	Cookie string `json:"cookie"` // 分页游标
-	Limit  string `json:"limit"`  // 分页大小，1-1000，默认是20
+	Cookie string `json:"cookie,omitempty"` // 分页游标
+	Limit  string `json:"limit,omitempty"`  // 分页大小，1-1000，默认是20
 }
 
 // QueryParams 转换为 query 参数

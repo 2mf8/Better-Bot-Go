@@ -7,7 +7,7 @@ type SearchInputResolved struct {
 
 // SearchRsp 搜索返回数据
 type SearchRsp struct {
-	Layouts []SearchLayout `json:"layouts"`
+	Layouts []SearchLayout `json:"layouts,omitempty"`
 }
 
 // SearchLayout 搜索结果的布局
@@ -36,8 +36,8 @@ const (
 
 // SearchRecord 每一条搜索结果
 type SearchRecord struct {
-	Cover string `json:"cover"`
-	Title string `json:"title"`
-	Tips  string `json:"tips"`
-	URL   string `json:"url"`
+	Cover string `json:"cover,omitempty"`
+	Title string `json:"title,omitempty"`
+	Tips  string `json:"tips,omitempty"`
+	URL   string `json:"url,omitempty"`
 }

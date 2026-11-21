@@ -2,20 +2,6 @@ package dto
 
 import "github.com/2mf8/Better-Bot-Go/dto/keyboard"
 
-// MessageToCreate 发送消息结构体定义
-type MessageToCreate struct {
-	Content string `json:"content,omitempty"`
-	Embed   *Embed `json:"embed,omitempty"`
-	Ark     *Ark   `json:"ark,omitempty"`
-	Image   string `json:"image,omitempty"`
-	// 要回复的消息id，为空是主动消息，公域机器人会异步审核，不为空是被动消息，公域机器人会校验语料
-	MsgID            string                    `json:"msg_id,omitempty"`
-	MessageReference *MessageReference         `json:"message_reference,omitempty"`
-	Markdown         *Markdown                 `json:"markdown,omitempty"`
-	Keyboard         *keyboard.MessageKeyboard `json:"keyboard,omitempty"` // 消息按钮组件
-	EventID          string                    `json:"event_id,omitempty"` // 要回复的事件id, 逻辑同MsgID
-}
-
 type C2CMsgType uint8
 
 const (
@@ -39,16 +25,47 @@ type GroupMessageToCreate = C2CMessageToCreate
 // C2CMessageToCreate 创建人人、群消息的结构体定义
 type C2CMessageToCreate struct {
 	Content          string                    `json:"content,omitempty"`
-	MsgType          C2CMsgType                `json:"msg_type"`
+	MsgType          C2CMsgType                `json:"msg_type,omitempty"`
 	Markdown         *Markdown                 `json:"markdown,omitempty"`
 	Keyboard         *keyboard.MessageKeyboard `json:"keyboard,omitempty"` // 消息按钮组件
 	Media            *FileInfo                 `json:"media,omitempty"`
-	Ark              *Ark                      `json:"ark,omitempty"`
+	Ark              *Ark                      `json:"ark,omitempty"` // 已失效
 	Image            string                    `json:"image,omitempty"`
 	MessageReference *MessageReference         `json:"message_reference,omitempty"`
 	EventID          EventType                 `json:"event_id,omitempty"` // 要回复的事件id, 逻辑同MsgID
 	MsgID            string                    `json:"msg_id,omitempty"`
 	MsgSeq           uint                      `json:"msg_seq,omitempty"`
+	IsWakeUp         bool                      `json:"is_wakeup,omitempty"`
+	Card             *MessageCard              `json:"card,omitempty"`
+	InputNotify      *InputNotify              `json:"input_notify,omitempty"`
+}
+
+type MessageCard struct {
+	Type    string `json:"type,omitempty"`
+	Content struct {
+		Title       string `json:"title,omitempty"`
+		Description string `json:"description,omitempty"`
+		Url         string `json:"url,omitempty"`
+		PicUrl      string `json:"pic_url,omitempty"`
+	}
+}
+
+type InputNotify struct {
+	InputType   int `json:"input_type,omitempty"`
+	InputSecond int `json:"input_second,omitempty"`
+}
+
+type StreamMessageCreate struct {
+	InputMode   string `json:"input_mode,omitempty"`
+	InputStatus int    `json:"input_status,omitempty"`
+	Index       int    `json:"index,omitempty"`
+	ContentType string `json:"content_type,omitempty"`
+	ContentRaw  string `json:"content_raw,omitempty"`
+	EventId     string `json:"event_id,omitempty"`
+	MsgId       string `json:"msg_id,omitempty"`
+	StreamMsgId string `json:"stream_msg_id,omitempty"`
+	MsgReq      int    `json:"msg_req,omitempty"`
+	IsWakeUp    bool   `json:"is_wakeup,omitempty"`
 }
 
 type FileInfo struct {
@@ -60,42 +77,30 @@ type GroupRichMediaMessageToCreate = C2CRichMediaMessageToCreate
 
 // C2CRichMediaMessageToCreate 媒体类型：1 图片，2 视频，3 语音，4 文件（暂不开放） 资源格式要求： 图片：png/jpg，视频：mp4，语音：silk，
 type C2CRichMediaMessageToCreate struct {
-	FileType   int    `json:"file_type"`
-	Url        string `json:"url"`
-	SrvSendMsg bool   `json:"srv_send_msg"`
-	FileData   []byte `json:"file_data"`
+	FileType   int    `json:"file_type,omitempty"`
+	Url        string `json:"url,omitempty"`
+	SrvSendMsg bool   `json:"srv_send_msg,omitempty"`
+	FileData   []byte `json:"file_data,omitempty"`
 }
 
 // MessageReference 引用消息
 type MessageReference struct {
-	MessageID             string `json:"message_id"`               // 消息 id
-	IgnoreGetMessageError bool   `json:"ignore_get_message_error"` // 是否忽律获取消息失败错误
+	MessageID             string `json:"message_id,omitempty"`               // 消息 id
+	IgnoreGetMessageError bool   `json:"ignore_get_message_error,omitempty"` // 是否忽律获取消息失败错误
 }
 
 // Markdown markdown 消息
 type Markdown struct {
-	TemplateID       int               `json:"template_id,omitempty"` // 模版 id
-	CustomTemplateId string            `json:"custom_template_id,omitempty"`
-	Params           []*MarkdownParams `json:"params"`  // 模版参数
-	Content          string            `json:"content"` // 原生 markdown
+	TemplateID               int    `json:"template_id,omitempty"` // 模版 id
+	CustomTemplateId         string `json:"custom_template_id,omitempty"`
+	Content                  string `json:"content,omitempty"`                     // 原生 markdown
+	ForceVerifyImageResource bool   `json:"force_verify_image_resource,omitempty"` // 模版参数
 }
 
 // MarkdownParams markdown 模版参数 键值对
 type MarkdownParams struct {
-	Key    string   `json:"key"`
-	Values []string `json:"values"`
-}
-
-// SettingGuideToCreate 发送引导消息的结构体
-type SettingGuideToCreate struct {
-	Content      string        `json:"content,omitempty"`       // 频道内发引导消息可以带@
-	SettingGuide *SettingGuide `json:"setting_guide,omitempty"` // 设置引导
-}
-
-// SettingGuide 设置引导
-type SettingGuide struct {
-	// 频道ID, 当通过私信发送设置引导消息时，需要指定guild_id
-	GuildID string `json:"guild_id"`
+	Key    string   `json:"key,omitempty"`
+	Values []string `json:"values,omitempty"`
 }
 
 type RichMediaMsgResp struct {
@@ -107,6 +112,10 @@ type RichMediaMsgResp struct {
 type GroupMsgResp = C2CMsgResp
 
 type C2CMsgResp struct {
-	Id        string    `json:"id"`
-	Timestamp Timestamp `json:"timestamp"`
+	Id        string    `json:"id,omitempty"`
+	Timestamp Timestamp `json:"timestamp,omitempty"`
+	ExtInfo   struct {
+		RefIdx string `json:"ref_idx,omitempty"`
+	} `json:"ext_info,omitempty"`
+	RemainMsgLen int `json:"remain_msg_len,omitempty"`
 }

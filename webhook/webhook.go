@@ -480,75 +480,12 @@ func (bot *Bot) ParseWHData(h *BotHeaderInfo, p *dto.WSPayload, message []byte) 
 			FriendDelEventHandler(h, p, fad)
 		}
 	}
-	if p.Type == dto.EventAtMessageCreate {
-		am := &dto.WSATMessageData{}
-		err := json.Unmarshal(message, am)
-		if err == nil {
-			ATMessageEventHandler(h, p, am)
-		}
-	}
-	if p.Type == dto.EventMessageCreate {
-		m := &dto.WSMessageData{}
-		err := json.Unmarshal(message, m)
-		if err == nil {
-			MessageEventHandler(h, p, m)
-		}
-	}
 	if p.Type == dto.EventInteractionCreate {
 		i := &dto.WSInteractionData{}
 		err := json.Unmarshal(message, i)
 		if err == nil {
 			i.ID = p.ID
 			InteractionEventHandler(h, p, i)
-		}
-	}
-	if p.Type == dto.EventDirectMessageCreate {
-		i := &dto.WSDirectMessageData{}
-		err := json.Unmarshal(message, i)
-		if err == nil {
-			DirectMessageEventHandler(h, p, i)
-		}
-	}
-	if p.Type == dto.EventMessageReactionAdd || p.Type == dto.EventMessageReactionRemove {
-		mr := &dto.WSMessageReactionData{}
-		err := json.Unmarshal(message, mr)
-		if err == nil {
-			MessageReactionEventHandler(h, p, mr)
-		}
-	}
-	if p.Type == dto.EventMessageAuditPass || p.Type == dto.EventMessageAuditReject {
-		mr := &dto.WSMessageAuditData{}
-		err := json.Unmarshal(message, mr)
-		if err == nil {
-			MessageAuditEventHandler(h, p, mr)
-		}
-	}
-	if p.Type == dto.EventForumThreadCreate || p.Type == dto.EventForumPostCreate || p.Type == dto.EventForumReplyCreate || p.Type == dto.EventForumThreadUpdate || p.Type == dto.EventForumPostDelete || p.Type == dto.EventForumThreadDelete || p.Type == dto.EventForumReplyDelete {
-		ft := &dto.WSForumAuditData{}
-		err := json.Unmarshal(message, ft)
-		if err == nil {
-			ForumAuditEventHandler(h, p, ft)
-		}
-	}
-	if p.Type == dto.EventGuildCreate || p.Type == dto.EventGuildUpdate || p.Type == dto.EventGuildDelete {
-		g := &dto.WSGuildData{}
-		err := json.Unmarshal(message, g)
-		if err == nil {
-			GuildEventHandler(h, p, g)
-		}
-	}
-	if p.Type == dto.EventChannelCreate || p.Type == dto.EventChannelUpdate || p.Type == dto.EventChannelDelete {
-		c := &dto.WSChannelData{}
-		err := json.Unmarshal(message, c)
-		if err == nil {
-			ChannelEventHandler(h, p, c)
-		}
-	}
-	if p.Type == dto.EventGuildMemberAdd || p.Type == dto.EventGuildMemberUpdate || p.Type == dto.EventGuildMemberRemove {
-		gm := &dto.WSGuildMemberData{}
-		err := json.Unmarshal(message, gm)
-		if err == nil {
-			GuildMemberEventHandler(h, p, gm)
 		}
 	}
 }

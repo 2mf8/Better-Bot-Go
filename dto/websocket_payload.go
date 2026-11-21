@@ -58,24 +58,6 @@ type WSReadyData struct {
 	Shard []uint32 `json:"shard"`
 }
 
-// WSGuildData 频道 payload
-type WSGuildData Guild
-
-// WSGuildMemberData 频道成员 payload
-type WSGuildMemberData Member
-
-// WSChannelData 子频道 payload
-type WSChannelData Channel
-
-// WSMessageData 消息 payload
-type WSMessageData Message
-
-// WSATMessageData only at 机器人的消息 payload
-type WSATMessageData Message
-
-// WSDirectMessageData 私信消息 payload
-type WSDirectMessageData Message
-
 type WSC2CMessageData C2CMessage
 
 type WSGroupATMessageData GroupMessage
@@ -85,36 +67,6 @@ type WSGroupMessageData GroupMessage
 type WSGroupMemberAddData GroupMemberChange
 
 type WSGroupMemberRemoveData GroupMemberChange
-
-// WSMessageDeleteData 消息 payload
-type WSMessageDeleteData MessageDelete
-
-// WSPublicMessageDeleteData 公域机器人的消息删除 payload
-type WSPublicMessageDeleteData MessageDelete
-
-// WSDirectMessageDeleteData 私信消息 payload
-type WSDirectMessageDeleteData MessageDelete
-
-// WSAudioData 音频机器人的音频流事件
-type WSAudioData AudioAction
-
-// WSMessageReactionData 表情表态事件
-type WSMessageReactionData MessageReaction
-
-// WSMessageAuditData 消息审核事件
-type WSMessageAuditData MessageAudit
-
-// WSThreadData 主题事件
-type WSThreadData Thread
-
-// WSPostData 帖子事件
-type WSPostData Post
-
-// WSReplyData 帖子回复事件
-type WSReplyData Reply
-
-// WSForumAuditData 帖子审核事件
-type WSForumAuditData ForumAuditResult
 
 // WSInteractionData 互动事件
 type WSInteractionData Interaction

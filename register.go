@@ -1,4 +1,4 @@
-package bot
+package main
 
 import (
 	"github.com/2mf8/Better-Bot-Go/log"

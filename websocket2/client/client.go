@@ -161,7 +161,7 @@ func (c *Client) Resume() error {
 func (c *Client) Identify() error {
 	// 避免传错 intent
 	if c.session.Intent == 0 {
-		c.session.Intent = dto.IntentGuilds
+		c.session.Intent = dto.IntentQQ
 	}
 	payload := &dto.WSPayload{
 		Data: &dto.WSIdentityData{

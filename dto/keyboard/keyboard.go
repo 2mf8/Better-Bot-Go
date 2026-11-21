@@ -51,24 +51,31 @@ type Button struct {
 	ID         string      `json:"id,omitempty"`          // 按钮 ID
 	RenderData *RenderData `json:"render_data,omitempty"` // 渲染展示字段
 	Action     *Action     `json:"action,omitempty"`      // 该按纽操作相关字段
+	GroupId    string      `json:"group_id,omitempty"`
 }
 
 // RenderData  按纽渲染展示
 type RenderData struct {
 	Label        string `json:"label,omitempty"`         // 按纽上的文字
 	VisitedLabel string `json:"visited_label,omitempty"` // 点击后按纽上文字
-	Style        int    `json:"style,omitempty"`         // 按钮样式，0：灰色线框，1：蓝色线框
+	Style        int    `json:"style,omitempty"`         // 按钮样式，0：灰色线框，1：蓝色线框，3: 白色背景+红色字体, 4:蓝色背景+白色字体
 }
 
 // Action 按纽点击操作
 type Action struct {
-	Type                 ActionType  `json:"type,omitempty"`           // 操作类型
-	Permission           *Permission `json:"permission,omitempty"`     // 可操作
-	UnsupportTips        string      `json:"unsupport_tips,omitempty"` // 可点击的次数, 默认不限
-	Data                 string      `json:"data,omitempty"`           // 操作相关数据
-	Reply                bool        `json:"reply,omitempty"`          // false:当前 true:弹出展示子频道选择器
-	Enter                bool        `json:"enter,omitempty"`
-	AtBotShowChannelList bool        `json:"at_bot_show_channel_list,omitempty"`
+	Type          ActionType  `json:"type,omitempty"`           // 操作类型
+	Permission    *Permission `json:"permission,omitempty"`     // 可操作
+	UnsupportTips string      `json:"unsupport_tips,omitempty"` // 可点击的次数, 默认不限
+	Data          string      `json:"data,omitempty"`           // 操作相关数据
+	ClickLimit    int         `json:"click_limit,omitempty"`
+	Reply         bool        `json:"reply,omitempty"` // false:当前 true:弹出展示子频道选择器
+	Enter         bool        `json:"enter,omitempty"`
+	Anchor        int         `json:"anchor,omitempty"`
+	Modal         struct {
+		Content     string `json:"content,omitempty"`
+		ConfirmText string `json:"confirm_text,omitempty"`
+		CancelText  string `json:"cancel_text,omitempty"`
+	} `json:"modal,omitempty"`
 }
 
 // Permission 按纽操作权限
@@ -107,7 +114,6 @@ func (c *CustomKeyboard) Button(label, visitedLabel, data string, style, actionT
 			Data:                 data,
 			Reply:                reply,
 			Enter:                enter,
-			AtBotShowChannelList: atBotShowChannelList,
 		},
 	}
 	Buttons = append(Buttons, button)
@@ -133,7 +139,6 @@ func (c *CustomKeyboard) TextButton(label, visitedLabel, data string, reply, ent
 			Data:                 data,
 			Reply:                reply,
 			Enter:                enter,
-			AtBotShowChannelList: false,
 		},
 	}
 	Buttons = append(Buttons, button)
@@ -159,7 +164,6 @@ func (c *CustomKeyboard) TextButtonAdmin(label, visitedLabel, data string, reply
 			Data:                 data,
 			Reply:                reply,
 			Enter:                enter,
-			AtBotShowChannelList: false,
 		},
 	}
 	Buttons = append(Buttons, button)
@@ -185,7 +189,6 @@ func (c *CustomKeyboard) UrlButton(label, visitedLabel, url string, reply, enter
 			Data:                 url,
 			Reply:                reply,
 			Enter:                enter,
-			AtBotShowChannelList: false,
 		},
 	}
 	Buttons = append(Buttons, button)
@@ -211,7 +214,6 @@ func (c *CustomKeyboard) UrlButtonAdmin(label, visitedLabel, url string, reply, 
 			Data:                 url,
 			Reply:                reply,
 			Enter:                enter,
-			AtBotShowChannelList: false,
 		},
 	}
 	Buttons = append(Buttons, button)

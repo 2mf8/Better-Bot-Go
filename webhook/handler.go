@@ -12,56 +12,8 @@ var ErrorNotifyHandler func(err error)
 // PlainEventHandler 透传handler
 var PlainEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, message []byte) error
 
-// GuildEventHandler 频道事件handler
-var GuildEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSGuildData) error
-
-// GuildMemberEventHandler 频道成员事件 handler
-var GuildMemberEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSGuildMemberData) error
-
-// ChannelEventHandler 子频道事件 handler
-var ChannelEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSChannelData) error
-
 // CheckEventHandler 消息前置检测
 var CheckEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, message []byte) bool
-
-// MessageEventHandler 消息事件 handler
-var MessageEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSMessageData) error
-
-// MessageDeleteEventHandler 消息事件 handler
-var MessageDeleteEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSMessageDeleteData) error
-
-// PublicMessageDeleteEventHandler 消息事件 handler
-var PublicMessageDeleteEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSPublicMessageDeleteData) error
-
-// DirectMessageDeleteEventHandler 消息事件 handler
-var DirectMessageDeleteEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSDirectMessageDeleteData) error
-
-// MessageReactionEventHandler 表情表态事件 handler
-var MessageReactionEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSMessageReactionData) error
-
-// ATMessageEventHandler at 机器人消息事件 handler
-var ATMessageEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSATMessageData) error
-
-// DirectMessageEventHandler 私信消息事件 handler
-var DirectMessageEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSDirectMessageData) error
-
-// AudioEventHandler 音频机器人事件 handler
-var AudioEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSAudioData) error
-
-// MessageAuditEventHandler 消息审核事件 handler
-var MessageAuditEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSMessageAuditData) error
-
-// ThreadEventHandler 论坛主题事件 handler
-var ThreadEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSThreadData) error
-
-// PostEventHandler 论坛回帖事件 handler
-var PostEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSPostData) error
-
-// ReplyEventHandler 论坛帖子回复事件 handler
-var ReplyEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSReplyData) error
-
-// ForumAuditEventHandler 论坛帖子审核事件 handler
-var ForumAuditEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSForumAuditData) error
 
 // InteractionEventHandler 互动事件 handler
 var InteractionEventHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSInteractionData) error
@@ -105,89 +57,9 @@ func init() {
 		return nil
 	}
 
-	// GuildEventHandler 频道事件handler
-	GuildEventHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSGuildData) error {
-		return nil
-	}
-
-	// GuildMemberEventHandler 频道成员事件 handler
-	GuildMemberEventHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSGuildMemberData) error {
-		return nil
-	}
-
-	// ChannelEventHandler 子频道事件 handler
-	ChannelEventHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSChannelData) error {
-		return nil
-	}
-
 	// CheckEventHandler 消息前置检测
 	CheckEventHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, message []byte) bool {
 		return false
-	}
-
-	// MessageEventHandler 消息事件 handler
-	MessageEventHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSMessageData) error {
-		return nil
-	}
-
-	// MessageDeleteEventHandler 消息事件 handler
-	MessageDeleteEventHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSMessageDeleteData) error {
-		return nil
-	}
-
-	// PublicMessageDeleteEventHandler 消息事件 handler
-	PublicMessageDeleteEventHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSPublicMessageDeleteData) error {
-		return nil
-	}
-
-	// DirectMessageDeleteEventHandler 消息事件 handler
-	DirectMessageDeleteEventHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSDirectMessageDeleteData) error {
-		return nil
-	}
-
-	// MessageReactionEventHandler 表情表态事件 handler
-	MessageReactionEventHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSMessageReactionData) error {
-		return nil
-	}
-
-	// ATMessageEventHandler at 机器人消息事件 handler
-	ATMessageEventHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSATMessageData) error {
-		return nil
-	}
-
-	// DirectMessageEventHandler 私信消息事件 handler
-	DirectMessageEventHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSDirectMessageData) error {
-		return nil
-	}
-
-	// AudioEventHandler 音频机器人事件 handler
-	AudioEventHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSAudioData) error {
-		return nil
-	}
-
-	// MessageAuditEventHandler 消息审核事件 handler
-	MessageAuditEventHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSMessageAuditData) error {
-		return nil
-	}
-
-	// ThreadEventHandler 论坛主题事件 handler
-	ThreadEventHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSThreadData) error {
-		return nil
-	}
-
-	// PostEventHandler 论坛回帖事件 handler
-	PostEventHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSPostData) error {
-		return nil
-	}
-
-	// ReplyEventHandler 论坛帖子回复事件 handler
-	ReplyEventHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSReplyData) error {
-		return nil
-	}
-
-	// ForumAuditEventHandler 论坛帖子审核事件 handler
-	ForumAuditEventHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSForumAuditData) error {
-		return nil
 	}
 
 	// InteractionEventHandler 互动事件 handler

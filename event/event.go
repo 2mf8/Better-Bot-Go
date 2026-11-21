@@ -9,57 +9,20 @@ import (
 
 var eventParseFuncMap = map[dto.OPCode]map[dto.EventType]eventParseFunc{
 	dto.WSDispatchEvent: {
-		dto.EventGuildCreate: guildHandler,
-		dto.EventGuildUpdate: guildHandler,
-		dto.EventGuildDelete: guildHandler,
-
-		dto.EventChannelCreate: channelHandler,
-		dto.EventChannelUpdate: channelHandler,
-		dto.EventChannelDelete: channelHandler,
-
-		dto.EventGuildMemberAdd:    guildMemberHandler,
-		dto.EventGuildMemberUpdate: guildMemberHandler,
-		dto.EventGuildMemberRemove: guildMemberHandler,
-
-		dto.EventMessageCreate: messageHandler,
-		dto.EventMessageDelete: messageDeleteHandler,
-
-		dto.EventMessageReactionAdd:    messageReactionHandler,
-		dto.EventMessageReactionRemove: messageReactionHandler,
-
-		dto.EventAtMessageCreate:     atMessageHandler,
-		dto.EventPublicMessageDelete: publicMessageDeleteHandler,
-
-		dto.EventDirectMessageCreate: directMessageHandler,
-		dto.EventDirectMessageDelete: directMessageDeleteHandler,
-
-		dto.EventAudioStart:  audioHandler,
-		dto.EventAudioFinish: audioHandler,
-		dto.EventAudioOnMic:  audioHandler,
-		dto.EventAudioOffMic: audioHandler,
-
-		dto.EventMessageAuditPass:   messageAuditHandler,
-		dto.EventMessageAuditReject: messageAuditHandler,
-
-		dto.EventForumThreadCreate: threadHandler,
-		dto.EventForumThreadUpdate: threadHandler,
-		dto.EventForumThreadDelete: threadHandler,
-		dto.EventForumPostCreate:   postHandler,
-		dto.EventForumPostDelete:   postHandler,
-		dto.EventForumReplyCreate:  replyHandler,
-		dto.EventForumReplyDelete:  replyHandler,
-		dto.EventForumAuditResult:  forumAuditHandler,
-
 		dto.EventInteractionCreate: interactionHandler,
 
 		dto.EventGroupATMessageCreate: groupAtMessageHandler,
 		dto.EventGroupMessageCreate:   groupMessageHandler,
 		dto.EventC2CMessageCreate:     c2cMessageHandle,
 
-		dto.EventGroupAddRobot:  groupAddRobotHandle,
-		dto.EventGroupDelRobot:  groupDelRobotHandle,
+		dto.EventGroupAddRobot:   groupAddRobotHandle,
+		dto.EventGroupDelRobot:   groupDelRobotHandle,
 		dto.EventGroupMsgReject:  groupMsgRejectHandle,
 		dto.EventGroupMsgReceive: groupMsgReceiveHandle,
+
+		dto.EventGroupMemberAdd:    groupMemberAddHandle,
+		dto.EventGroupMemberRemove: groupMemberReomveHandle,
+		dto.EventGroupJoinRequest:  groupJoinRequestHandle,
 
 		dto.EventFriendAdd:     friendAddHandle,
 		dto.EventFriendDel:     friendDelHandle,
@@ -99,182 +62,6 @@ func GetId(message []byte) string {
 	return data.String()
 }
 
-func guildHandler(payload *dto.WSPayload, message []byte) error {
-	data := &dto.WSGuildData{}
-	if err := ParseData(message, data); err != nil {
-		return err
-	}
-	if DefaultHandlers.Guild != nil {
-		return DefaultHandlers.Guild(payload, data)
-	}
-	return nil
-}
-
-func channelHandler(payload *dto.WSPayload, message []byte) error {
-	data := &dto.WSChannelData{}
-	if err := ParseData(message, data); err != nil {
-		return err
-	}
-	if DefaultHandlers.Channel != nil {
-		return DefaultHandlers.Channel(payload, data)
-	}
-	return nil
-}
-
-func guildMemberHandler(payload *dto.WSPayload, message []byte) error {
-	data := &dto.WSGuildMemberData{}
-	if err := ParseData(message, data); err != nil {
-		return err
-	}
-	if DefaultHandlers.GuildMember != nil {
-		return DefaultHandlers.GuildMember(payload, data)
-	}
-	return nil
-}
-
-func messageHandler(payload *dto.WSPayload, message []byte) error {
-	data := &dto.WSMessageData{}
-	if err := ParseData(message, data); err != nil {
-		return err
-	}
-	if DefaultHandlers.Message != nil {
-		return DefaultHandlers.Message(payload, data)
-	}
-	return nil
-}
-
-func messageDeleteHandler(payload *dto.WSPayload, message []byte) error {
-	data := &dto.WSMessageDeleteData{}
-	if err := ParseData(message, data); err != nil {
-		return err
-	}
-	if DefaultHandlers.MessageDelete != nil {
-		return DefaultHandlers.MessageDelete(payload, data)
-	}
-	return nil
-}
-
-func messageReactionHandler(payload *dto.WSPayload, message []byte) error {
-	data := &dto.WSMessageReactionData{}
-	if err := ParseData(message, data); err != nil {
-		return err
-	}
-	if DefaultHandlers.MessageReaction != nil {
-		return DefaultHandlers.MessageReaction(payload, data)
-	}
-	return nil
-}
-
-func atMessageHandler(payload *dto.WSPayload, message []byte) error {
-	data := &dto.WSATMessageData{}
-	if err := ParseData(message, data); err != nil {
-		return err
-	}
-	if DefaultHandlers.ATMessage != nil {
-		return DefaultHandlers.ATMessage(payload, data)
-	}
-	return nil
-}
-
-func publicMessageDeleteHandler(payload *dto.WSPayload, message []byte) error {
-	data := &dto.WSPublicMessageDeleteData{}
-	if err := ParseData(message, data); err != nil {
-		return err
-	}
-	if DefaultHandlers.PublicMessageDelete != nil {
-		return DefaultHandlers.PublicMessageDelete(payload, data)
-	}
-	return nil
-}
-
-func directMessageHandler(payload *dto.WSPayload, message []byte) error {
-	data := &dto.WSDirectMessageData{}
-	if err := ParseData(message, data); err != nil {
-		return err
-	}
-	if DefaultHandlers.DirectMessage != nil {
-		return DefaultHandlers.DirectMessage(payload, data)
-	}
-	return nil
-}
-
-func directMessageDeleteHandler(payload *dto.WSPayload, message []byte) error {
-	data := &dto.WSDirectMessageDeleteData{}
-	if err := ParseData(message, data); err != nil {
-		return err
-	}
-	if DefaultHandlers.DirectMessageDelete != nil {
-		return DefaultHandlers.DirectMessageDelete(payload, data)
-	}
-	return nil
-}
-
-func audioHandler(payload *dto.WSPayload, message []byte) error {
-	data := &dto.WSAudioData{}
-	if err := ParseData(message, data); err != nil {
-		return err
-	}
-	if DefaultHandlers.Audio != nil {
-		return DefaultHandlers.Audio(payload, data)
-	}
-	return nil
-}
-
-func threadHandler(payload *dto.WSPayload, message []byte) error {
-	data := &dto.WSThreadData{}
-	if err := ParseData(message, data); err != nil {
-		return err
-	}
-	if DefaultHandlers.Thread != nil {
-		return DefaultHandlers.Thread(payload, data)
-	}
-	return nil
-}
-
-func postHandler(payload *dto.WSPayload, message []byte) error {
-	data := &dto.WSPostData{}
-	if err := ParseData(message, data); err != nil {
-		return err
-	}
-	if DefaultHandlers.Post != nil {
-		return DefaultHandlers.Post(payload, data)
-	}
-	return nil
-}
-
-func replyHandler(payload *dto.WSPayload, message []byte) error {
-	data := &dto.WSReplyData{}
-	if err := ParseData(message, data); err != nil {
-		return err
-	}
-	if DefaultHandlers.Reply != nil {
-		return DefaultHandlers.Reply(payload, data)
-	}
-	return nil
-}
-
-func forumAuditHandler(payload *dto.WSPayload, message []byte) error {
-	data := &dto.WSForumAuditData{}
-	if err := ParseData(message, data); err != nil {
-		return err
-	}
-	if DefaultHandlers.ForumAudit != nil {
-		return DefaultHandlers.ForumAudit(payload, data)
-	}
-	return nil
-}
-
-func messageAuditHandler(payload *dto.WSPayload, message []byte) error {
-	data := &dto.WSMessageAuditData{}
-	if err := ParseData(message, data); err != nil {
-		return err
-	}
-	if DefaultHandlers.MessageAudit != nil {
-		return DefaultHandlers.MessageAudit(payload, data)
-	}
-	return nil
-}
-
 func interactionHandler(payload *dto.WSPayload, message []byte) error {
 	data := &dto.WSInteractionData{}
 	if err := ParseData(message, data); err != nil {
@@ -305,6 +92,39 @@ func groupMessageHandler(payload *dto.WSPayload, message []byte) error {
 	}
 	if DefaultHandlers.GroupMessage != nil {
 		return DefaultHandlers.GroupMessage(payload, data)
+	}
+	return nil
+}
+
+func groupMemberAddHandle(payload *dto.WSPayload, message []byte) error {
+	data := &dto.WSGroupMemberAddData{}
+	if err := ParseData(message, data); err != nil {
+		return err
+	}
+	if DefaultHandlers.GroupMemberAdd != nil {
+		return DefaultHandlers.GroupMemberAdd(payload, data)
+	}
+	return nil
+}
+
+func groupMemberReomveHandle(payload *dto.WSPayload, message []byte) error {
+	data := &dto.WSGroupMemberRemoveData{}
+	if err := ParseData(message, data); err != nil {
+		return err
+	}
+	if DefaultHandlers.GroupMemberRemove != nil {
+		return DefaultHandlers.GroupMemberRemove(payload, data)
+	}
+	return nil
+}
+
+func groupJoinRequestHandle(payload *dto.WSPayload, message []byte) error {
+	data := &dto.WSGroupJoinRequestData{}
+	if err := ParseData(message, data); err != nil {
+		return err
+	}
+	if DefaultHandlers.GroupJoinRequest != nil {
+		return DefaultHandlers.GroupJoinRequest(payload, data)
 	}
 	return nil
 }

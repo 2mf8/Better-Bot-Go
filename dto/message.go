@@ -1,106 +1,112 @@
 package dto
 
 // Message 消息结构体定义
-type Message struct {
-	// 消息ID
-	ID string `json:"id"`
-	// 子频道ID
-	ChannelID string `json:"channel_id"`
-	// 频道ID
-	GuildID string `json:"guild_id"`
-	// 内容
-	Content string `json:"content"`
-	// 发送时间
-	Timestamp Timestamp `json:"timestamp"`
-	// 消息编辑时间
-	EditedTimestamp Timestamp `json:"edited_timestamp"`
-	// 是否@all
-	MentionEveryone bool `json:"mention_everyone"`
-	// 消息发送方
-	Author *User `json:"author"`
-	// 消息发送方Author的member属性，只是部分属性
-	Member *Member `json:"member"`
-	// 附件
-	Attachments []*MessageAttachment `json:"attachments"`
-	// 结构化消息-embeds
-	Embeds []*Embed `json:"embeds"`
-	// 消息中的提醒信息(@)列表
-	Mentions []*User `json:"mentions"`
-	// ark 消息
-	Ark *Ark `json:"ark"`
-	// 私信消息
-	DirectMessage bool `json:"direct_message"`
-	// 子频道 seq，用于消息间的排序，seq 在同一子频道中按从先到后的顺序递增，不同的子频道之前消息无法排序
-	SeqInChannel string `json:"seq_in_channel"`
-	// 引用的消息
-	MessageReference *MessageReference `json:"message_reference,omitempty"`
-	// 私信场景下，该字段用来标识从哪个频道发起的私信
-	SrcGuildID string `json:"src_guild_id"`
-}
 
 type GroupMessage struct {
-	GroupId     string               `json:"group_id"`
-	GroupOpenId string               `json:"group_openid"`
-	Content     string               `json:"content"`
-	MsgId       string               `json:"id"`
-	MsgScene    *MsgSceneContent     `json:"message_scene"`
-	Author      *Author              `json:"author"`
-	Timestamp   Timestamp            `json:"timestamp"`
-	MsgType     uint32               `json:"message_type"`
-	Attachments []*MessageAttachment `json:"attachments"`
+	GroupId     string               `json:"group_id,omitempty"`
+	GroupOpenId string               `json:"group_openid,omitempty"`
+	Content     string               `json:"content,omitempty"`
+	MsgId       string               `json:"id,omitempty"`
+	MsgScene    *MsgSceneContent     `json:"message_scene,omitempty"`
+	Author      *Author              `json:"author,omitempty"`
+	Timestamp   Timestamp            `json:"timestamp,omitempty"`
+	MsgType     int                  `json:"message_type,omitempty"`
+	Attachments []*MessageAttachment `json:"attachments,omitempty"`
+	Mentions    []*User              `json:"mentions,omitempty"`
+	ArkData     *ArkData             `json:"ark_data,omitempty"`
+	MsgElements []*MsgElement        `json:"msg_elements,omitempty"`
 }
 type MsgSceneContent struct {
-	Source string   `json:"source"`
+	Source string   `json:"source,omitempty"`
 	Ext    []string `json:"ext,omitempty"`
 }
 type C2CMessage struct {
-	Id          string           `json:"id"`
-	Author      *C2CAuthor       `json:"author"`
-	Content     string           `json:"content"`
-	Timestamp   Timestamp        `json:"timestamp"`
-	MsgScene    *MsgSceneContent `json:"message_scene"`
-	MsgType     uint32           `json:"msg_type"`
-	Attachments []*C2CAtachment  `json:"attachments"`
+	Id          string           `json:"id,omitempty"`
+	Author      *C2CAuthor       `json:"author,omitempty"`
+	Content     string           `json:"content,omitempty"`
+	Timestamp   Timestamp        `json:"timestamp,omitempty"`
+	MsgScene    *MsgSceneContent `json:"message_scene,omitempty"`
+	MsgType     uint32           `json:"msg_type,omitempty"`
+	Attachments []*C2CAtachment  `json:"attachments,omitempty"`
+	ArkData     *ArkData         `json:"ark_data,omitempty"`
+	MsgElements []*MsgElement    `json:"msg_elements,omitempty"`
 }
 
 type C2CAtachment struct {
-	ContentType string `json:"content_type"`
-	Filename    string `json:"filename"`
-	Height      int    `json:"height"`
-	Width       int    `json:"width"`
-	Size        int    `json:"size"`
-	Url         string `json:"url"`
+	ContentType  string `json:"content_type,omitempty"`
+	Filename     string `json:"filename,omitempty"`
+	Height       int    `json:"height,omitempty"`
+	Width        int    `json:"width,omitempty"`
+	Size         int    `json:"size,omitempty"`
+	Url          string `json:"url,omitempty"`
+	VoiceWavUrl  string `json:"voice_wav_url,omitempty"`
+	AsrReferText string `json:"asr_refer_text,omitempty"`
+}
+
+type ArkData struct {
+	Prompt  string `json:"prompt,omitempty"`
+	ArkType string `json:"ark_type,omitempty"`
+	ArkName string `json:"ark_name,omitempty"`
+	Fields  struct {
+		Tag        string   `json:"tag,omitempty"`
+		Tags       []string `json:"tags,omitempty"`
+		Title      string   `json:"title,omitempty"`
+		Desc       string   `json:"desc,omitempty"`
+		JumpUrl    string   `json:"jump_url,omitempty"`
+		Preview    string   `json:"preview,omitempty"`
+		Source     string   `json:"source,omitempty"`
+		SourceLogo string   `json:"source_logo,omitempty"`
+		TagIcon    string   `json:"tag_icon,omitempty"`
+		NickName   string   `json:"nickname,omitempty"`
+		Avatar     string   `json:"avatar,omitempty"`
+		Address    string   `json:"address,omitempty"`
+	}
+}
+
+type MsgElement struct {
+	MsgIdx      string          `json:"msg_idx,omitempty"`
+	Author      *C2CAuthor      `json:"author,omitempty"`
+	MessageType int             `json:"message_type,omitempty"`
+	Content     string          `json:"content,omitempty"`
+	Attachments []*C2CAtachment `json:"attachments,omitempty"`
+	ArkData     *ArkData        `json:"ark_data,omitempty"`
+	MsgElements []*MsgElement   `json:"msg_elements,omitempty"`
 }
 
 type C2CAuthor struct {
-	UserOpenId  string `json:"user_openid"`
-	Bot         bool   `json:"bot,omitempty"`
-	UserId      string `json:"id,omitempty"`
-	UnionOpenId string `json:"union_openid,omitempty"`
-	UserName    string `json:"username"`
+	UserOpenId       string `json:"user_openid,omitempty"`
+	Bot              bool   `json:"bot,omitempty"`
+	UserId           string `json:"id,omitempty"`
+	UnionOpenId      string `json:"union_openid,omitempty"`
+	UnionUserAccount string `json:"union_user_account,omitempty"`
+	MemberOpenId     string `json:"member_openid,omitempty"`
+	Member_role      string `json:"member_role,omitempty"`
+	UserName         string `json:"username,omitempty"`
 }
 
 type Author struct {
-	Bot         bool   `json:"bot,omitempty"`
-	UserId      string `json:"id,omitempty"`
-	UserOpenId  string `json:"member_openid,omitempty"`
-	MemberRole  string `json:"member_role,omitempty"`
-	UnionOpenId string `json:"union_openid,omitempty"`
-	UserName    string `json:"username"`
+	Bot              bool   `json:"bot,omitempty"`
+	UserId           string `json:"id,omitempty"`
+	UserOpenId       string `json:"user_openid,omitempty"`
+	MemberOpenId     string `json:"member_openid,omitempty"`
+	MemberRole       string `json:"member_role,omitempty"`
+	UnionOpenId      string `json:"union_openid,omitempty"`
+	UnionUserAccount string `json:"union_user_account,omitempty"`
+	UserName         string `json:"username,omitempty"`
 }
 
 // Embed 结构
 type Embed struct {
 	Title       string                `json:"title,omitempty"`
 	Description string                `json:"description,omitempty"`
-	Prompt      string                `json:"prompt"` // 消息弹窗内容，消息列表摘要
+	Prompt      string                `json:"prompt,omitempty"` // 消息弹窗内容，消息列表摘要
 	Thumbnail   MessageEmbedThumbnail `json:"thumbnail,omitempty"`
 	Fields      []*EmbedField         `json:"fields,omitempty"`
 }
 
 // MessageEmbedThumbnail embed 消息的缩略图对象
 type MessageEmbedThumbnail struct {
-	URL string `json:"url"`
+	URL string `json:"url,omitempty"`
 }
 
 // EmbedField Embed字段描述
@@ -111,7 +117,14 @@ type EmbedField struct {
 
 // MessageAttachment 附件定义
 type MessageAttachment struct {
-	URL string `json:"url"`
+	URL          string `json:"url,omitempty"`
+	Filename     string `json:"filename,omitempty"`
+	Height       int    `json:"height,omitempty"`
+	Width        int    `json:"width,omitempty"`
+	Size         int    `json:"size,omitempty"`
+	ContentType  string `json:"content_type,omitempty"`
+	VoiceWavUrl  string `json:"voice_wav_url,omitempty"`
+	AsrReferText string `json:"asr_refer_text,omitempty"`
 }
 
 // MessageReactionUsers 消息表情表态用户列表
