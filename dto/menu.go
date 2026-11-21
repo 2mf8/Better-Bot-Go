@@ -38,6 +38,11 @@ type Switch struct {
 	Default  bool   `json:"default,omitempty"`
 }
 
+type PanelsGetOption struct {
+	Cursor string `json:"cursor,omitempty"`
+	Limit  int    `json:"limit,omitempty"`
+}
+
 type PanelsGetResp struct {
 	Records []struct {
 		PanelID    string `json:"panel_id,omitempty"`

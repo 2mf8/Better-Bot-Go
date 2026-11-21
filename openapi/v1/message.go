@@ -60,6 +60,19 @@ func (o *openAPI) PostGroupRichMediaMessage(ctx context.Context, groupID string,
 	return resp.Result().(*dto.RichMediaMsgResp), nil
 }
 
+func (o *openAPI) PostC2CStreamMessage(ctx context.Context, userId string, req *dto.StreamMessageCreate) (*dto.C2CMsgResp, error) {
+	resp, err := o.request(ctx).
+		SetResult(dto.C2CMsgResp{}).
+		SetPathParam("user_openid", userId).
+		SetBody(req).
+		Post(o.getURL(privateStreamMessageUri))
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.Result().(*dto.C2CMsgResp), nil
+}
+
 // DelC2CMessage 撤回C2C机器人2分钟内发出的消息
 func (o *openAPI) RetractC2CMessage(ctx context.Context,
 	userID, msgID string, options ...openapi.RetractMessageOption) error {
@@ -105,8 +118,4 @@ func (o *openAPI) RetractGroupMessage(ctx context.Context,
 	resp, err := request.Delete(o.getURL(groupBotMessageDelUri))
 	json.Unmarshal(resp.Body(), &dmr)
 	return *dmr, err
-}
-
-func (o *openAPI) RevokeGroupMessage(ctx context.Context, groupId, messageId string) {
-
 }

@@ -44,6 +44,8 @@ var C2CMsgRejectHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto
 
 var C2CMsgReceiveHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSFriendMsgReveiceData) error
 
+var GroupJoinRequestHandler func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSGroupJoinRequestData) error
+
 func init() {
 	// ReadyHandler 可以处理 ws 的 ready 事件
 	ReadyHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSReadyData) {}
@@ -108,6 +110,10 @@ func init() {
 	}
 
 	C2CMsgReceiveHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSFriendMsgReveiceData) error {
+		return nil
+	}
+
+	GroupJoinRequestHandler = func(bot *BotHeaderInfo, event *dto.WSPayload, data *dto.WSGroupJoinRequestData) error {
 		return nil
 	}
 }

@@ -11,9 +11,15 @@ import (
 // RetractMessageOption 撤回消息可选参数
 type RetractMessageOption int
 
+type PanelsCursorOption string
+
+type PanelsLimitOption int
+
 const (
 	// RetractMessageOptionHidetip 撤回消息隐藏小灰条可选参数
 	RetractMessageOptionHidetip RetractMessageOption = 1
+	PanelsCursorOptionDefault   PanelsCursorOption   = ""
+	PanelsLimitOptionDefault    PanelsLimitOption    = 10
 )
 
 // OpenAPI openapi 完整实现
@@ -24,7 +30,9 @@ type OpenAPI interface {
 	MessageAPI
 	WebhookAPI
 	InteractionAPI
-	GetGroupMembersAPI
+	GroupMembersAPI
+	MenuApi
+	GroupApi
 }
 
 // Base 基础能力接口
@@ -44,9 +52,21 @@ type WebsocketAPI interface {
 	WS(ctx context.Context, params map[string]string, body string) (*dto.WebsocketAP, error)
 }
 
+type MenuApi interface {
+	GolbalMenuGet(ctx context.Context) (*dto.MenuGetResp, error)
+	GolbalMenuSet(ctx context.Context, req *dto.MenuSetReq) (*dto.MenuSetResp, error)
+	PanelsGet(ctx context.Context, scope string, option *dto.PanelsGetOption) (*dto.PanelsGetResp, error)
+	PanelsCreate(ctx context.Context, req *dto.PanelsSetReq) (*dto.PanelsSetResp, error)
+	PanelDetailGet(ctx context.Context, panelId string) (*dto.PanelGetResp, error)
+	PanelSet(ctx context.Context, panelId string, req *dto.PanelSetReq) (*dto.PanelSetResp, error)
+	PanelDel(ctx context.Context, panelId string) (*dto.PanelDelResp, error)
+	PanelTargetSet(ctx context.Context, panelId string, req *dto.PanelTargetSetReq) (*dto.PanelTargetSetResp, error)
+}
+
 // UserAPI 用户相关接口
 type UserAPI interface {
 	Me(ctx context.Context) (*dto.User, error)
+	ShareUrl(ctx context.Context, req *dto.ShareLinkReq) (*dto.ShareLinkResp, error)
 }
 
 // MessageAPI 消息相关接口
@@ -58,6 +78,16 @@ type MessageAPI interface {
 	RetractC2CMessage(ctx context.Context, userID, msgID string, options ...RetractMessageOption) error
 	RetractGroupBotMessage(ctx context.Context, groupID, msgID string, options ...RetractMessageOption) error
 	RetractGroupMessage(ctx context.Context, groupID, msgID string, options ...RetractMessageOption) (dto.RetractMessageResp, error)
+	PostC2CStreamMessage(ctx context.Context, userId string, req *dto.StreamMessageCreate) (*dto.C2CMsgResp, error)
+}
+
+type GroupApi interface {
+	GroupInfoGet(ctx context.Context, groupId string) (*dto.GroupInfoGetResp, error)
+	GroupBotStatusGet(ctx context.Context, groupId string) (*dto.GroupBotStatus, error)
+	JoinRequestListGet(ctx context.Context, groupId string, req *dto.JoinRequestGetOption) (*dto.GroupJoinRequestListGetResp, error)
+	ApprovalJoinRequest(ctx context.Context, groupId, userId string, req *dto.GroupJoinRequestSetReq) (*dto.GroupJoinRequestSetResp, error)
+	MuteStatusGet(ctx context.Context, groupId string)(*dto.MuteStatusGetResp, error)
+	MuteStatusSet(ctx context.Context, groupId string, req *dto.MuteSetReq) (*dto.MuteSetResp, error)
 }
 
 // InteractionAPI 互动接口
@@ -74,6 +104,6 @@ type WebhookAPI interface {
 	RemoveSession(ctx context.Context, sessionID string) error
 }
 
-type GetGroupMembersAPI interface {
-	GetGroupMembers(ctx context.Context, groupId string, limit, startIndex int) (*dto.GetGroupMembersResp, error)
+type GroupMembersAPI interface {
+	GroupMembersGet(ctx context.Context, groupId string, cursor string) (*dto.GroupMembersListResp, error)
 }

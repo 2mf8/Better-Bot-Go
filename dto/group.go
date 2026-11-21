@@ -3,12 +3,13 @@ package dto
 type GroupInfoGetReq struct{}
 
 type GroupInfoGetResp struct {
-	GroupOpenid     string   `json:"group_openid,omitempty"`
-	GroupName       string   `json:"group_name,omitempty"`
-	GroupFingerMemo string   `json:"group_finger_memo,omitempty"`
-	GroupClassText  string   `json:"group_class_text,omitempty"`
-	GroupTags       []string `json:"group_tags,omitempty"`
-	GroupMemberNum  int      `json:"group_member_num,omitempty"`
+	GroupOpenid      string   `json:"group_openid,omitempty"`
+	GroupName        string   `json:"group_name,omitempty"`
+	GroupFingerMemo  string   `json:"group_finger_memo,omitempty"`
+	GroupClassText   string   `json:"group_class_text,omitempty"`
+	GroupTags        []string `json:"group_tags,omitempty"`
+	GroupMemberNum   int      `json:"group_member_num,omitempty"`
+	UnionGroupOpenid string   `json:"union_group_openid,omitempty"`
 }
 
 type GroupBotStatus struct {
@@ -150,10 +151,16 @@ type MuteStatusGetResp struct {
 }
 
 type MuteSetReq struct {
+	Members []*SetMemberMuteState `json:"members,omitempty"`
+}
+
+type SetMemberMuteState struct {
 	Op           string `json:"op,omitempty"`
 	MemberOpenId string `json:"member_openid,omitempty"`
 	MuteExpireAt string `json:"mute_expire_at,omitempty"`
 }
+
+type MuteSetResp struct{}
 
 type GroupJoinApprovalStrategyGetReq struct {
 	Cursor string `json:"cursor,omitempty"`
@@ -223,4 +230,9 @@ type WhiteListUsersSetResp struct {
 	StrategyID         string `json:"strategy_id,omitempty"`
 	WhitelistUserCount int    `json:"whitelist_user_count,omitempty"`
 	UpdatedAt          string `json:"updated_at,omitempty"`
+}
+
+type JoinRequestGetOption struct {
+	Cursor string `json:"cursor,omitempty"`
+	Limit  int    `json:"limit,omitempty"`
 }

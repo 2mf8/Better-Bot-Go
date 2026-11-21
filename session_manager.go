@@ -1,4 +1,4 @@
-package main
+package bot
 
 import (
 	"github.com/2mf8/Better-Bot-Go/dto"

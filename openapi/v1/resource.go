@@ -22,13 +22,15 @@ type uri string
 const (
 	getAppAccessTokenUri uri = "/app/getAppAccessToken"
 
-	privateMessageUri          uri = "/v2/users/{openid}/messages"
-	privateStreamMessageUri    uri = "/v2/users/{user_openid}/stream_messages"
+	privateMessageUri       uri = "/v2/users/{openid}/messages"
+	privateStreamMessageUri uri = "/v2/users/{user_openid}/stream_messages"
+	userInfoGetUri          uri = "/v2/users/{user_openid}/info"
+
 	groupMessageUri            uri = "/v2/groups/{group_openid}/messages"
 	privateRichMediaMessageUri uri = "/v2/users/{openid}/files"
 	groupRichMediaMessageUri   uri = "/v2/groups/{group_openid}/files"
 	groupMembersGet            uri = "/v2/groups/{group_openid}/members"
-	groupMemberInfoGetUri      uri = "/v2/groups/{group_openid}/members"
+	groupMemberInfoGetUri      uri = "v2/groups/{group_openid}/members/{member_openid}"
 	groupMembersRemoveUri      uri = "/v2/groups/{group_openid}/batch_remove_members"
 	groupMemberBlackListGetUri uri = "/v2/groups/{group_openid}/member_blacklist"
 	groupMemberBlackListSetUri uri = "/v2/groups/{group_openid}/member_blacklist"
@@ -49,7 +51,7 @@ const (
 	groupJoinApproveStategyWhitelistUsersUri uri = "/v2/groups/join_approval_strategy/{strategy_id}/whitelist_users"
 
 	menuUri              uri = "/v2/menu"
-	panelsGetUri         uri = "/v2/panels?scope={scope}"
+	panelsGetUri         uri = "/v2/panels"
 	panelsSetUri         uri = "/v2/panels"
 	panelGetDetailUri    uri = "/v2/panels/{panel_id}"
 	panelSetDetailUri    uri = "/v2/panels/{panel_id}"

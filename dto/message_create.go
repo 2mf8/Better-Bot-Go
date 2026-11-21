@@ -17,6 +17,8 @@ const (
 	C2CMsgTypeEmbed
 	// C2CMsgTypeMedia media
 	C2CMsgTypeMedia C2CMsgType = 7
+	// 图文消息
+	C2CTuWen C2CMsgType = 8
 )
 
 // GroupMessageToCreate 消息类型： 0 是文本，1 图文混排，2  markdown， 3 ark，4 embed 7 富媒体
