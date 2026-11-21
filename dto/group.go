@@ -236,3 +236,8 @@ type JoinRequestGetOption struct {
 	Cursor string `json:"cursor,omitempty"`
 	Limit  int    `json:"limit,omitempty"`
 }
+
+type GroupBlackListGetOption struct {
+	Cursor string `json:"cursor,omitempty"`
+	Limit  int    `json:"limit,omitempty"`
+}

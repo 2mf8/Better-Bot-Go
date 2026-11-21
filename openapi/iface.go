@@ -67,6 +67,7 @@ type MenuApi interface {
 type UserAPI interface {
 	Me(ctx context.Context) (*dto.User, error)
 	ShareUrl(ctx context.Context, req *dto.ShareLinkReq) (*dto.ShareLinkResp, error)
+	UserInfoGet(ctx context.Context, userId string) (*dto.UserInfoGetResp, error)
 }
 
 // MessageAPI 消息相关接口
@@ -86,8 +87,14 @@ type GroupApi interface {
 	GroupBotStatusGet(ctx context.Context, groupId string) (*dto.GroupBotStatus, error)
 	JoinRequestListGet(ctx context.Context, groupId string, req *dto.JoinRequestGetOption) (*dto.GroupJoinRequestListGetResp, error)
 	ApprovalJoinRequest(ctx context.Context, groupId, userId string, req *dto.GroupJoinRequestSetReq) (*dto.GroupJoinRequestSetResp, error)
-	MuteStatusGet(ctx context.Context, groupId string)(*dto.MuteStatusGetResp, error)
+	MuteStatusGet(ctx context.Context, groupId string) (*dto.MuteStatusGetResp, error)
 	MuteStatusSet(ctx context.Context, groupId string, req *dto.MuteSetReq) (*dto.MuteSetResp, error)
+	JoinApprovalStrategyGet(ctx context.Context, req *dto.GroupJoinApprovalStrategyGetReq) (*dto.GroupJoinApprovalStrategyGetResp, error)
+	JoinApprovalStrategySet(ctx context.Context, req *dto.GroupJoinApprovalStrategySetReq) (*dto.GroupJoinApprovalStrategySetResp, error)
+	JoinApprovalStrategyUpdate(ctx context.Context, strategyId string, req *dto.GroupJoinApprovalStrategyUpdReq) (*dto.GroupJoinApprovalStrategyUpdResp, error)
+	JoinApprovalStrategyDelete(ctx context.Context, strategyId string) (*dto.GroupJoinApprovalStrategyDelResp, error)
+	JoinApprovalStrategyExecute(ctx context.Context, strategyId string) (*dto.GroupJoinApprovalStrategyExeResp, error)
+	JoinApprovalStrategyWhitelistUsersSet(ctx context.Context, strategyId string, req *dto.WhiteListUsersSetReq) (*dto.WhiteListUsersSetResp, error)
 }
 
 // InteractionAPI 互动接口
@@ -106,4 +113,8 @@ type WebhookAPI interface {
 
 type GroupMembersAPI interface {
 	GroupMembersGet(ctx context.Context, groupId string, cursor string) (*dto.GroupMembersListResp, error)
+	GroupMemberInfoGet(ctx context.Context, groupId, userId string) (*dto.GroupMemberInfoGetResp, error)
+	GroupMembersRemove(ctx context.Context, groupId string, req *dto.GroupMemberRemoveReq) (*dto.GroupMemberRemoveResp, error)
+	GroupBlackListGet(ctx context.Context, groupId string, req *dto.GroupBlackListGetOption) (*dto.GroupBlackListGetResp, error)
+	GroupBlackListSet(ctx context.Context, groupId string, req *dto.BlackListUserSetReq) (*dto.BlackListUserSetResp, error)
 }

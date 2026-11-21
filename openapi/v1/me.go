@@ -29,3 +29,14 @@ func (o *openAPI) ShareUrl(ctx context.Context, req *dto.ShareLinkReq) (*dto.Sha
 	}
 	return resp.Result().(*dto.ShareLinkResp), nil
 }
+
+func (o *openAPI) UserInfoGet(ctx context.Context, userId string)(*dto.UserInfoGetResp, error){
+	resp, err := o.request(ctx).
+		SetResult(dto.UserInfoGetResp{}).
+		SetPathParam("user_openid", userId).
+		Get(o.getURL(userInfoGetUri))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*dto.UserInfoGetResp), nil
+}
