@@ -100,7 +100,7 @@ type GroupApi interface {
 // InteractionAPI 互动接口
 type InteractionAPI interface {
 	// PutInteraction 更新互动信息
-	PutInteraction(ctx context.Context, interactionID string, body string) error
+	PutInteraction(ctx context.Context, interactionID string, req *dto.InteractionRespReq) error
 }
 
 // WebhookAPI http 事件网关相关接口

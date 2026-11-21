@@ -46,3 +46,7 @@ const (
 	// InteractionDataTypeChatSearch 聊天框搜索
 	InteractionDataTypeChatSearch InteractionDataType = 9
 )
+
+type InteractionRespReq struct {
+	Code int `json:"code,omitempty"`
+}
