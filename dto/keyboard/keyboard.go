@@ -71,11 +71,13 @@ type Action struct {
 	Reply         bool        `json:"reply,omitempty"` // false:当前 true:弹出展示子频道选择器
 	Enter         bool        `json:"enter,omitempty"`
 	Anchor        int         `json:"anchor,omitempty"`
-	Modal         struct {
-		Content     string `json:"content,omitempty"`
-		ConfirmText string `json:"confirm_text,omitempty"`
-		CancelText  string `json:"cancel_text,omitempty"`
-	} `json:"modal,omitempty"`
+	Modal         *Modal      `json:"modal,omitempty"`
+}
+
+type Modal struct {
+	Content     string `json:"content,omitempty"`
+	ConfirmText string `json:"confirm_text,omitempty"`
+	CancelText  string `json:"cancel_text,omitempty"`
 }
 
 // Permission 按纽操作权限
@@ -111,9 +113,9 @@ func (c *CustomKeyboard) Button(label, visitedLabel, data string, style, actionT
 			Permission: &Permission{
 				Type: PermissionType(permissionType),
 			},
-			Data:                 data,
-			Reply:                reply,
-			Enter:                enter,
+			Data:  data,
+			Reply: reply,
+			Enter: enter,
 		},
 	}
 	Buttons = append(Buttons, button)
@@ -136,9 +138,44 @@ func (c *CustomKeyboard) TextButton(label, visitedLabel, data string, reply, ent
 			Permission: &Permission{
 				Type: PermissionTypAll,
 			},
-			Data:                 data,
-			Reply:                reply,
-			Enter:                enter,
+			Data:  data,
+			Reply: reply,
+			Enter: enter,
+		},
+	}
+	Buttons = append(Buttons, button)
+	return c
+}
+
+/*
+文本按钮，所有人可用：
+modalText 对话框显示文本,
+confirmText 确认按钮文本,
+cannelText 取消按钮文本
+*/
+func (c *CustomKeyboard) TextButtonWithModal(label, visitedLabel, modalText, confirmText, cannelText, data string, reply, enter bool) *CustomKeyboard {
+	AutoId++
+	id := fmt.Sprintf("%v", AutoId)
+	button := &Button{
+		ID: id,
+		RenderData: &RenderData{
+			Label:        label,
+			VisitedLabel: visitedLabel,
+			Style:        0,
+		},
+		Action: &Action{
+			Type: ActionTypeAtBot,
+			Permission: &Permission{
+				Type: PermissionTypAll,
+			},
+			Modal: &Modal{
+				Content:     modalText,
+				ConfirmText: cannelText,
+				CancelText:  cannelText,
+			},
+			Data:  data,
+			Reply: reply,
+			Enter: enter,
 		},
 	}
 	Buttons = append(Buttons, button)
@@ -161,9 +198,9 @@ func (c *CustomKeyboard) TextButtonAdmin(label, visitedLabel, data string, reply
 			Permission: &Permission{
 				Type: PermissionTypManager,
 			},
-			Data:                 data,
-			Reply:                reply,
-			Enter:                enter,
+			Data:  data,
+			Reply: reply,
+			Enter: enter,
 		},
 	}
 	Buttons = append(Buttons, button)
@@ -186,9 +223,44 @@ func (c *CustomKeyboard) UrlButton(label, visitedLabel, url string, reply, enter
 			Permission: &Permission{
 				Type: PermissionTypAll,
 			},
-			Data:                 url,
-			Reply:                reply,
-			Enter:                enter,
+			Data:  url,
+			Reply: reply,
+			Enter: enter,
+		},
+	}
+	Buttons = append(Buttons, button)
+	return c
+}
+
+/*
+链接按钮，所有人可用：
+modalText 对话框显示文本,
+confirmText 确认按钮文本,
+cannelText 取消按钮文本
+*/
+func (c *CustomKeyboard) UrlButtonWithModel(label, visitedLabel, modalText, confirmText, cannelText, url string, reply, enter bool) *CustomKeyboard {
+	AutoId++
+	id := fmt.Sprintf("%v", AutoId)
+	button := &Button{
+		ID: id,
+		RenderData: &RenderData{
+			Label:        label,
+			VisitedLabel: visitedLabel,
+			Style:        0,
+		},
+		Action: &Action{
+			Type: ActionTypeURL,
+			Permission: &Permission{
+				Type: PermissionTypAll,
+			},
+			Modal: &Modal{
+				Content:     modalText,
+				ConfirmText: cannelText,
+				CancelText:  cannelText,
+			},
+			Data:  url,
+			Reply: reply,
+			Enter: enter,
 		},
 	}
 	Buttons = append(Buttons, button)
@@ -211,9 +283,9 @@ func (c *CustomKeyboard) UrlButtonAdmin(label, visitedLabel, url string, reply, 
 			Permission: &Permission{
 				Type: PermissionTypManager,
 			},
-			Data:                 url,
-			Reply:                reply,
-			Enter:                enter,
+			Data:  url,
+			Reply: reply,
+			Enter: enter,
 		},
 	}
 	Buttons = append(Buttons, button)
